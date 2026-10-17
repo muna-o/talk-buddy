@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     return new Response(await response.arrayBuffer(), {
       headers: {
         ...cors,
-        "Content-Type": "audio/mpeg",
+        "Content-Type": "application/octet-stream",
         "Cache-Control": "no-store",
       },
     });
