@@ -44,13 +44,26 @@ Deno.serve(async (req) => {
       },
     );
     if (!response.ok) {
-      let code;
+      let code, providerMessage;
       try {
-        code = (await response.json()).detail?.status;
+        const detail = (await response.json()).detail;
+        code = detail?.status;
+        providerMessage =
+          typeof detail?.message === "string" ? detail.message : "";
       } catch {
         /* Provider may return a non-JSON error. */
       }
-      throw new Error(voiceServiceError(response.status, code));
+      return json(
+        {
+          error: voiceServiceError(response.status, code, providerMessage),
+          provider_code:
+            typeof code === "string" && /^[a-z0-9_]{1,80}$/i.test(code)
+              ? code
+              : undefined,
+          provider_http_status: response.status,
+        },
+        400,
+      );
     }
     return new Response(await response.arrayBuffer(), {
       headers: {

@@ -162,6 +162,6 @@ The project is linked, both migrations are applied, and `chat`, `reflection`, an
 
 The initial Gemini 3.8 Flash request timed out. The deployed model is now `gemini-3.5-flash-lite`, which passed live chat, reflection and Free Mode tests. Its configurable default and environment template match that deployment. Official model reference: https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
 
-ElevenLabs audio was attempted live but the provider reported unavailable credits. Check the ElevenLabs account’s usage/credit balance before retrying audio. No successful audio-generation claim is made. The deployed TTS function now distinguishes invalid keys, missing TTS permission, unavailable voices, credits, and rate limits.
+ElevenLabs audio was attempted live for all four selected voices. Each returned HTTP 402 `payment_required` because Free-plan users cannot use Voice Library voices through the API. The earlier credit-error label was incorrect; this response does not establish an exhausted account balance. Keep these voices with a plan that includes their API use, or explicitly choose Free-plan API-supported voices. The deployed TTS function distinguishes this plan restriction from insufficient key/workspace quota, unusual-activity restrictions, invalid keys, missing permissions, unavailable voices, and rate limits. Official reference: https://elevenlabs.io/docs/eleven-creative/quickstart
 
 The frontend has not been deployed to Vercel. Replace the local allowed origins with the exact approved HTTPS origin when deploying publicly.
