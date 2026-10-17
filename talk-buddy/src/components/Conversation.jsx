@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Square, Volume2, Pause, Play, RotateCcw } from "lucide-react";
 import { invoke } from "../services/supabase";
 import ConversationComposer from "./ConversationComposer";
+import ListenButton from "./ListenButton";
 import CourseIllustration from "./CourseIllustration";
 export default function Conversation({
   initial,
@@ -29,7 +30,7 @@ export default function Conversation({
   const audioRequest = useRef(0);
   const autoSpoken = useRef(new Set());
   useEffect(() => {
-    soundAllowed.current = p.audioEnabled && !paused;
+    soundAllowed.current = !paused;
   }, [p.audioEnabled, paused]);
   useEffect(() => {
     mounted.current = true;
@@ -50,10 +51,20 @@ export default function Conversation({
       audio.current?.pause();
     }
   }, [p.audioEnabled, paused]);
+  useEffect(() => {
+    const stop = () => {
+      audioRequest.current += 1;
+      audio.current?.pause();
+      setPlaying(null);
+    };
+    window.addEventListener("talkbuddy-audio-start", stop);
+    return () => window.removeEventListener("talkbuddy-audio-start", stop);
+  }, []);
   const config = session.configuration;
   const play = useCallback(
     async (message) => {
-      if (!p.audioEnabled) return;
+      if (paused) return;
+      window.dispatchEvent(new Event("talkbuddy-audio-start"));
       const request = ++audioRequest.current;
       audio.current?.pause();
       setPlaying(message.id);
@@ -93,7 +104,7 @@ export default function Conversation({
         }
       }
     },
-    [p.audioEnabled, p.voice],
+    [paused, p.voice],
   );
   useEffect(() => {
     const latest = nextAutomaticReply(
@@ -196,6 +207,12 @@ export default function Conversation({
         >
           <h2 id="chat-scenario-heading">Scenario</h2>
           <p>{config.scenario}</p>
+          <ListenButton
+            text={config.scenario}
+            voice={p.voice}
+            label="scenario"
+            disabled={paused}
+          />
         </section>
         <div
           className="chat-messages"
@@ -207,9 +224,10 @@ export default function Conversation({
             <div className={`message ${m.role}`} key={m.id}>
               <small>{m.role === "user" ? "You" : config.character.name}</small>
               <p>{m.content}</p>
-              {m.role === "assistant" && p.audioEnabled && (
+              {m.role === "assistant" && (
                 <button
                   className="audio-button"
+                  disabled={paused}
                   onClick={() =>
                     playing === m.id
                       ? ((audioRequest.current += 1),

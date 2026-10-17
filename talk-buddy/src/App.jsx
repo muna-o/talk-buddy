@@ -1,4 +1,5 @@
 import Courses from "./pages/Courses";
+import Whimsy from "./components/Whimsy";
 import logo from "./assets/logo.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
@@ -175,11 +176,13 @@ export default function App() {
         <Lesson
           key={lesson.id}
           lesson={lesson}
+          voice={preferences.voice}
           start={start}
           back={() => navigate("courses")}
         />
       );
-    if (page === "free") return <FreeMode start={start} />;
+    if (page === "free")
+      return <FreeMode start={start} voice={preferences.voice} />;
     if (page === "conversation" && conversation)
       return (
         <Conversation
@@ -221,9 +224,9 @@ export default function App() {
             <h2>Your privacy</h2>
             <p>
               Practice messages are stored in Supabase and sent to Google
-              Gemini. Playing a reply sends that text to ElevenLabs. Browser
-              speech recognition may use your browser provider’s speech service.
-              TalkBuddy does not store raw voice recordings.
+              Gemini. Playing a scenario or reply sends that text to ElevenLabs.
+              Browser speech recognition may use your browser provider’s speech
+              service. TalkBuddy does not store raw voice recordings.
             </p>
             <p>
               This hackathon prototype is for fictional practice. Google’s free
@@ -291,6 +294,14 @@ export default function App() {
           </div>
         </div>
       </header>
+      <div className="page-doodles" aria-hidden="true">
+        <Whimsy className="edge-doodle edge-one" />
+        <Whimsy kind="clock" className="edge-doodle edge-two" />
+        <Whimsy className="edge-doodle edge-three" />
+        <Whimsy className="edge-doodle edge-four" />
+        <Whimsy kind="clock" className="edge-doodle edge-five" />
+        <Whimsy className="edge-doodle edge-six" />
+      </div>
       <main
         id="main"
         tabIndex={-1}

@@ -9,7 +9,7 @@ A React + Vite educational prototype for self-advocacy and conversation practice
 - Warm responsive home, four complete lesson definitions, Learn → Explore → Practice → Reflect, custom Free Mode, shared conversation interface, progress, settings and support resources.
 - Nine themes, adjustable text/spacing, self-hosted OpenDyslexic and readable font options, reduced motion, optional audio, local preferences and Supabase preference sync.
 - Supabase anonymous authentication; owner-scoped sessions, messages and reflections; atomic turn saving; server-controlled curriculum; 20-turn session limit; per-user API quotas (100/hour, 400/day).
-- Gemini structured conversation and reflection functions, ElevenLabs on-demand audio of saved authorized messages, approved voice selection, in-memory audio cache, editable optional browser speech transcription.
+- Gemini structured conversation and reflection functions, ElevenLabs on-demand audio of scenarios and saved authorized messages, approved voice selection, in-memory audio cache, editable optional browser speech transcription.
 - History resume and deletion; no raw voice storage; private keys never enter the frontend.
 
 AI conversations require configured, deployed services. There is no simulated AI fallback. Reading lessons and changing local preferences works without services.
@@ -180,3 +180,10 @@ The conversation shows only the communication method selected in Preferences: **
 - Course titles replace the old decorative lesson titles. Four richer situations and revised choices are in the frontend and curriculum migration `202610170003_richer_lesson_context.sql`, applied to the hosted database. Existing conversation configurations remain historical snapshots.
 - Free Practice is a two-step form: situation/difficulty, then partner/personality. Back navigation retains all values.
 - Expanded/categorized communication cards are **not implemented**. See [the research-informed proposal](docs/communication-cards-proposal.md).
+
+
+## Scenario listening and playful frames
+
+Course illustrations use irregular double pencil outlines. Wide-screen page gutters contain gray doodles with muted sage and lavender accents; narrow screens and simplified-decoration mode hide the edge doodles.
+
+Course scenarios are shorter in lessons and new sessions (migration `202610170004`). Scenario previews in Learn, Explore, Free Practice, and the chat have explicit Listen/Stop controls. All saved partner replies offer Listen in every communication method, even with automatic audio disabled. Manual listening uses the selected approved ElevenLabs voice. Only one clip plays at a time; leaving the page or pausing practice stops playback. Scenario TTS requires authentication, the shared usage limit, and 1–1500 characters. Saved-message playback still checks session ownership. Scenarios or replies chosen for listening are sent to ElevenLabs; nothing is read automatically unless enabled in Preferences.

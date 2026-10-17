@@ -103,38 +103,32 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
         {toggle(
           "Enable character audio",
           "audioEnabled",
-          "Audio is off by default.",
+          "Automatic playback is off by default. You can always press Listen.",
         )}
-        {p.audioEnabled && (
-          <>
-            {select("Character voice", "voice", [
-              ["", "Default approved voice"],
-              ...voices.map((v) => [v.id, v.name]),
-            ])}
-            {voices.length > 0 && (
-              <small>
-                {
-                  (voices.find((v) => v.id === p.voice) || voices[0])
-                    .description
-                }
-              </small>
-            )}
+        <>
+          {select("Character voice", "voice", [
+            ["", "Default approved voice"],
+            ...voices.map((v) => [v.id, v.name]),
+          ])}
+          {voices.length > 0 && (
             <small>
-              Choose a voice for character replies. Playback needs the connected
-              voice service.
+              {(voices.find((v) => v.id === p.voice) || voices[0]).description}
             </small>
-            {!voices.length && (
-              <small>
-                Voice choices appear after ElevenLabs is configured.
-              </small>
-            )}
-            {toggle(
+          )}
+          <small>
+            Choose a voice for scenarios and character replies. Playback needs
+            the connected voice service.
+          </small>
+          {!voices.length && (
+            <small>Voice choices appear after ElevenLabs is configured.</small>
+          )}
+          {p.audioEnabled &&
+            toggle(
               "Read every partner message automatically",
               "autoSpeech",
               "Read the opening and every new reply aloud, whether you type, speak, or use cards.",
             )}
-          </>
-        )}
+        </>
       </section>
     </div>
   );

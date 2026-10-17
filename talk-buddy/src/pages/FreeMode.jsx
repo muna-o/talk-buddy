@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
+import ListenButton from "../components/ListenButton";
 import Whimsy from "../components/Whimsy";
-export default function FreeMode({ start }) {
+export default function FreeMode({ start, voice }) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
     scenario: "",
@@ -78,6 +79,11 @@ export default function FreeMode({ start }) {
                 placeholder="I want to tell my manager that the office is too loud."
               />
             </label>
+            <ListenButton
+              text={form.scenario}
+              voice={voice}
+              label="your scenario"
+            />
             <p className="field-help">
               A few details help: where are you, who are you talking to, and
               what would you like to ask or say?
@@ -110,6 +116,11 @@ export default function FreeMode({ start }) {
             <div className="scenario-summary">
               <strong>Your situation</strong>
               <p>{form.scenario}</p>
+              <ListenButton
+                text={form.scenario}
+                voice={voice}
+                label="your scenario"
+              />
               <button
                 type="button"
                 className="text-button"
@@ -191,8 +202,9 @@ export default function FreeMode({ start }) {
             )}
             <p className="privacy-note">
               Use fictional details. Practice messages are sent to Supabase and
-              Google Gemini; voice playback sends partner replies to ElevenLabs.
-              Gemini’s free tier may use content to improve its products.
+              Google Gemini; voice playback sends the text you choose to hear to
+              ElevenLabs. Gemini’s free tier may use content to improve its
+              products.
             </p>
             {error && (
               <p className="error" role="alert">

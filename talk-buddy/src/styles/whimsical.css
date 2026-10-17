@@ -452,3 +452,127 @@ small {
     height: 50px;
   }
 }
+
+/* Uneven, doubled pencil lines echo the user's hand-drawn course art. */
+.course-card .course-icon {
+  position: relative;
+  border: 0;
+  border-radius: 25% 20% 26% 19% / 21% 27% 19% 25%;
+  padding: 8px;
+}
+.sketch-frame {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.4px;
+  opacity: 0.62;
+  pointer-events: none;
+}
+.sketch-frame path {
+  vector-effect: non-scaling-stroke;
+}
+.sketch-frame path + path {
+  stroke-width: 0.85px;
+  opacity: 0.58;
+}
+.course-card.peach .sketch-frame {
+  transform: rotate(2deg);
+}
+.course-card.blue .sketch-frame {
+  transform: rotate(-2deg);
+}
+.course-card.lavender .sketch-frame {
+  transform: rotate(1deg);
+}
+.text-listen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.text-listen .audio-button {
+  font-size: 0.75rem;
+}
+.text-listen small {
+  font-size: 0.73rem;
+}
+.text-listen .error {
+  flex-basis: 100%;
+  margin: 0;
+}
+.page-doodles {
+  display: none;
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 1280px) {
+  .page-doodles {
+    display: block;
+    position: fixed;
+    inset: 110px 0 24px;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .edge-doodle {
+    position: absolute;
+    width: clamp(30px, calc((100vw - 1200px) / 2), 70px);
+    height: auto;
+    opacity: 0.55;
+  }
+  .edge-one {
+    left: 6px;
+    top: 5%;
+    transform: rotate(-18deg);
+  }
+  .edge-two {
+    right: 6px;
+    top: 12%;
+    transform: rotate(16deg);
+  }
+  .edge-three {
+    left: 8px;
+    top: 48%;
+    transform: rotate(15deg);
+  }
+  .edge-four {
+    right: 9px;
+    top: 52%;
+    transform: rotate(-22deg);
+  }
+  .edge-five {
+    left: 6px;
+    bottom: 0;
+    transform: rotate(-12deg);
+  }
+  .edge-six {
+    right: 5px;
+    bottom: 1%;
+    transform: rotate(14deg);
+  }
+}
+/* Most doodles keep their pencil gray; a few get a quiet wash of color. */
+.edge-three,
+.hero-star-two {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(13%) saturate(620%)
+    hue-rotate(88deg) brightness(95%) contrast(87%);
+}
+.edge-four,
+.courses-heading-star {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(15%) saturate(610%)
+    hue-rotate(215deg) brightness(96%) contrast(86%);
+}
+[data-theme="dark"] .edge-three,
+[data-theme="dark"] .hero-star-two {
+  filter: invert(1) sepia(0.3) saturate(1.7) hue-rotate(55deg);
+}
+[data-theme="dark"] .edge-four,
+[data-theme="dark"] .courses-heading-star {
+  filter: invert(1) sepia(0.3) saturate(1.7) hue-rotate(205deg);
+}
+[data-clutter="true"] .page-doodles {
+  display: none;
+}

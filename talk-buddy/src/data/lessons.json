@@ -12,7 +12,7 @@
       "Ask for processing time"
     ],
     "introduction": "Instructions can be confusing, especially when they come quickly. You can ask for a different explanation, written steps, or more time. You do not need to apologize for needing support.",
-    "scenario": "You are in class with Ms. Morgan. She has just explained a new assignment aloud and moved on to helping another student. You caught some of the instructions, but you do not know which page to open or what to do first. You would like a clear first step and instructions you can check again.",
+    "scenario": "Ms. Morgan explained an assignment, but you missed which page to open and what to do first. Ask for a clear first step or written instructions.",
     "character": {
       "name": "Ms. Morgan",
       "role": "Teacher",
@@ -58,7 +58,7 @@
       "Share a communication preference"
     ],
     "introduction": "Your comfort matters. You can explain what is difficult and ask for a change. You can also ask for a break without explaining everything about yourself.",
-    "scenario": "You and Taylor are planning a class presentation at a table in a busy classroom. Other groups are talking nearby and chairs keep scraping across the floor. You are finding it hard to follow Taylor’s ideas or organize your own. A quieter table is available nearby, and you could also work together in writing or take a break.",
+    "scenario": "You and Taylor are planning a presentation in a noisy classroom. It is hard to focus. You could ask for a quieter table, work in writing, or take a break.",
     "character": {
       "name": "Taylor",
       "role": "Project partner",
@@ -104,7 +104,7 @@
       "Choose when to disengage"
     ],
     "introduction": "A boundary tells someone what you will or won’t do. You do not owe anyone your password. If someone keeps asking, you can repeat your boundary, leave, or ask a trusted person for support. Their behavior is not your fault.",
-    "scenario": "A classmate, Alex, cannot open the class notes and asks to use your school account. You do not want anyone else using your login. Alex says it would only take a minute and that friends should trust each other. You can keep your account private, offer another way to share the notes if you want, or leave the conversation. Never enter a real password in this practice.",
+    "scenario": "Alex asks to use your school account and keeps pushing after you hesitate. You want to keep your login private. Practice saying no or leaving. Never enter a real password.",
     "character": {
       "name": "Alex",
       "role": "Classmate",
@@ -150,7 +150,7 @@
       "Decide when to pause"
     ],
     "introduction": "People can understand the same words differently. Misunderstandings can be mutual. You can explain what you meant, ask a question, disagree, or decide to stop.",
-    "scenario": "You and Jordan are choosing an idea for a group project. Jordan suggests making a video. You ask “Why did you choose that?” because you want to understand the plan, but Jordan hears it as criticism and says you never like their ideas. You want to clarify what you meant and decide together whether to keep discussing the project.",
+    "scenario": "Jordan suggests a video for your project. You ask why, hoping to understand, but Jordan hears criticism. Clarify what you meant or ask to pause.",
     "character": {
       "name": "Jordan",
       "role": "Project partner",

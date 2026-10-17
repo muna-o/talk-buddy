@@ -1,9 +1,10 @@
 import { courseTitle } from "../data/courseTitles";
+import ListenButton from "../components/ListenButton";
 import Whimsy from "../components/Whimsy";
 import CourseIllustration from "../components/CourseIllustration";
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
-export default function Lesson({ lesson, start, back }) {
+export default function Lesson({ lesson, start, back, voice }) {
   const [phase, setPhase] = useState(0);
   const [choice, setChoice] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -49,6 +50,11 @@ export default function Lesson({ lesson, start, back }) {
             <aside className="scenario-context">
               <strong>Scenario</strong>
               <p>{lesson.scenario}</p>
+              <ListenButton
+                text={lesson.scenario}
+                voice={voice}
+                label="scenario"
+              />
             </aside>
             <button className="primary" onClick={() => setPhase(1)}>
               Explore the situation <ArrowRight size={18} />
@@ -59,6 +65,11 @@ export default function Lesson({ lesson, start, back }) {
             <aside className="scenario-context">
               <strong>Scenario</strong>
               <p>{lesson.scenario}</p>
+              <ListenButton
+                text={lesson.scenario}
+                voice={voice}
+                label="scenario"
+              />
             </aside>
             <h2 className="practice-question">{lesson.question}</h2>
             <p>There can be more than one way that works for you.</p>
