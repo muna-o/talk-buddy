@@ -1,0 +1,8 @@
+project_id = "talk-buddy"
+# Authorization is verified in each function with auth.getUser(token).
+[functions.chat]
+verify_jwt = false
+[functions.tts]
+verify_jwt = false
+[functions.reflection]
+verify_jwt = false

@@ -1,122 +1,422 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRight,
+  BookOpen,
+  Compass,
+  HeartHandshake,
+  Home,
+  Leaf,
+  MessageCircle,
+  Settings,
+  TrendingUp,
+} from "lucide-react";
+import lessons from "./data/lessons.json";
+import { applyPreferences, readPreferences } from "./services/preferences";
+import { configured, getUser, invoke, supabase } from "./services/supabase";
+import CourseCard from "./components/CourseCard";
+import SettingsPanel from "./components/SettingsPanel";
+import Conversation from "./components/Conversation";
+import Lesson from "./pages/Lesson";
+import FreeMode from "./pages/FreeMode";
+import Reflection from "./pages/Reflection";
+import Progress from "./pages/Progress";
+import Support from "./pages/Support";
+import HomePage from "./pages/Home";
+const navigation = [
+  ["home", Home, "Home"],
+  ["courses", BookOpen, "Course Mode"],
+  ["free", Compass, "Free Mode"],
+  ["progress", TrendingUp, "My practice"],
+];
+export default function App() {
+  const [preferences, setPreferences] = useState(readPreferences);
+  const [page, setPage] = useState("home");
+  const [lesson, setLesson] = useState(null);
+  const [conversation, setConversation] = useState(null);
+  const [ended, setEnded] = useState(null);
+  const [voices, setVoices] = useState(voiceCatalog);
+  const [notice, setNotice] = useState("");
+  const [syncReady, setSyncReady] = useState(!configured);
+  const heading = useRef(null);
+  const localEdited = useRef(false);
+  function update(values) {
+    localEdited.current = true;
+    setPreferences((p) => ({ ...p, ...values }));
+  }
+  function navigate(to) {
+    setPage(to);
+    setNotice("");
+  }
+  useEffect(() => {
+    let active = true;
+    if (!configured) return;
+    getUser()
+      .then(async (user) => {
+        const { data, error } = await supabase
+          .from("preferences")
+          .select("settings")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (error) throw error;
+        if (active && data?.settings && !localEdited.current)
+          setPreferences((p) => ({ ...p, ...data.settings }));
+        if (active) setSyncReady(true);
+        invoke("chat", { action: "voices" })
+          .then((data) => {
+            if (active) setVoices(data.voices);
+          })
+          .catch(() => {
+            if (active)
+              setNotice(
+                "Supabase is reachable. Deploy the database migrations and Edge Functions to enable practice and voices.",
+              );
+          });
+      })
+      .catch((e) => {
+        if (active) {
+          setNotice(e.message);
+          setSyncReady(true);
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    applyPreferences(preferences);
+    try {
+      localStorage.setItem(
+        "talkbuddy-preferences",
+        JSON.stringify(preferences),
+      );
+    } catch {
+      /* Some private browser modes disable local storage. */
+    }
+    if (!configured || !syncReady) return;
+    const timer = setTimeout(() => {
+      getUser()
+        .then((user) =>
+          supabase.from("preferences").upsert({
+            user_id: user.id,
+            settings: preferences,
+            updated_at: new Date().toISOString(),
+          }),
+        )
+        .then(({ error }) => {
+          if (error)
+            setNotice(
+              "Preferences are saved in this browser, but cloud sync failed.",
+            );
+        })
+        .catch(() =>
+          setNotice(
+            "Preferences are saved locally. Cloud sync is unavailable.",
+          ),
+        );
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [preferences, syncReady]);
+  useEffect(() => {
+    heading.current?.focus();
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [page]);
+  async function start(configuration) {
+    const data = await invoke("chat", { action: "start", ...configuration });
+    setConversation(data);
+    setVoices(data.voices);
+    navigate("conversation");
+  }
+  function selectLesson(l) {
+    setLesson(l);
+    navigate("lesson");
+  }
+  async function resume(session) {
+    if (session.status !== "active") {
+      setEnded(session);
+      navigate("reflection");
+      return;
+    }
+    try {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("session_id", session.id)
+        .order("ordering");
+      if (error) throw error;
+      setConversation({ session, messages: data });
+      navigate("conversation");
+    } catch {
+      setNotice("Could not load the conversation. Please try again.");
+    }
+  }
+  async function restart(session) {
+    try {
+      if (session.status === "active")
+        await invoke("chat", { action: "end", session_id: session.id });
+      const c = session.configuration;
+      await start(
+        session.mode === "course"
+          ? { mode: "course", lesson_id: session.lesson_id }
+          : {
+              mode: "free",
+              scenario: c.scenario,
+              ...c.character,
+              difficulty: c.difficulty,
+            },
+      );
+    } catch (e) {
+      setNotice(e.message);
+    }
+  }
+  const content = () => {
+    if (page === "courses")
+      return (
+        <>
+          <div className="eyebrow">SMALL STEPS, USEFUL SKILLS</div>
+          <h1>Find your starting point.</h1>
+          <p className="lead">
+            Four ways to practice speaking up for yourself. Start wherever feels
+            useful.
+          </p>
+          <div className="course-grid">
+            {lessons.map((l) => (
+              <CourseCard key={l.id} lesson={l} onSelect={selectLesson} />
+            ))}
+          </div>
+          <aside className="flow-note">
+            <BookOpen size={22} />
+            <div>
+              <strong>A little learning. A little practice.</strong>
+              <p>
+                Each lesson follows Learn → Explore → Practice → Reflect. No
+                timer, no score.
+              </p>
+            </div>
+          </aside>
+        </>
+      );
+    if (page === "lesson" && lesson)
+      return (
+        <Lesson
+          key={lesson.id}
+          lesson={lesson}
+          start={start}
+          back={() => navigate("courses")}
+        />
+      );
+    if (page === "free") return <FreeMode start={start} />;
+    if (page === "conversation" && conversation)
+      return (
+        <Conversation
+          key={conversation.session.id}
+          initial={conversation}
+          preferences={preferences}
+          onFinish={(s) => {
+            setEnded(s);
+            setConversation(null);
+            navigate("reflection");
+          }}
+          onRestart={restart}
+          onUpdate={(data) => setConversation(data)}
+          support={() => navigate("support")}
+        />
+      );
+    if (page === "reflection" && ended)
+      return (
+        <Reflection
+          key={ended.id}
+          session={ended}
+          again={() => void restart(ended)}
+          courses={() => navigate("courses")}
+        />
+      );
+    if (page === "settings")
+      return (
+        <>
+          <div className="eyebrow">YOUR SPACE, YOUR PREFERENCES</div>
+          <h1>Make it feel like you.</h1>
+          <p className="lead">
+            Choose what feels comfortable. Your preferences save automatically.
+          </p>
+          <SettingsPanel
+            preferences={preferences}
+            update={update}
+            voices={voices}
+          />
+          <section className="panel">
+            <h2>Your privacy</h2>
+            <p>
+              Practice messages are stored in Supabase and sent to Google
+              Gemini. Playing a reply sends that text to ElevenLabs. Browser
+              speech recognition may use your browser provider’s speech service.
+              TalkBuddy does not store raw voice recordings.
+            </p>
+            <p>
+              This hackathon prototype is for fictional practice. Google’s free
+              API tier may use content to improve its products. Avoid sensitive
+              personal information. Anonymous history can be lost if you clear
+              this browser’s storage.
+            </p>
+            <button onClick={() => navigate("progress")}>
+              Manage conversation history
+            </button>
+          </section>
+        </>
+      );
+    if (page === "progress")
+      return <Progress open={resume} courseList={() => navigate("courses")} />;
+    if (page === "support") return <Support />;
+    return <HomePage navigate={navigate} selectLesson={selectLesson} />;
+  };
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <header
+        className="site-header"
+        inert={!preferences.onboarded ? true : undefined}
+      >
+        <div className="nav-wrap">
+          <button
+            className="brand"
+            onClick={() => navigate("home")}
+            aria-label="TalkBuddy home"
+          >
+            <span className="brand-mark">
+              <MessageCircle size={24} />
+              <Leaf size={12} />
+            </span>
+            talk<span>buddy</span>
+            <span className="beta">BETA</span>
+          </button>
+          <nav aria-label="Main navigation">
+            {navigation.map(([id, Icon, label]) => (
+              <button
+                key={id}
+                onClick={() => navigate(id)}
+                aria-current={page === id ? "page" : undefined}
+              >
+                <Icon size={17} />
+                {label}
+              </button>
+            ))}
+          </nav>
+          <div className="nav-tools">
+            <button
+              className="icon-button"
+              onClick={() => navigate("settings")}
+              aria-label="Settings"
+            >
+              <Settings size={21} />
+            </button>
+            <button
+              className="support-link"
+              onClick={() => navigate("support")}
+            >
+              Find support <HeartHandshake size={17} />
+            </button>
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+      </header>
+      <main
+        id="main"
+        tabIndex={-1}
+        ref={heading}
+        inert={!preferences.onboarded ? true : undefined}
+      >
+        {!configured && (
+          <div className="connection-banner">
+            <span className="status-dot" />
+            <span>
+              Preview · Lessons and preferences are ready. Connect Supabase and
+              Gemini to enable AI practice.
+            </span>
+          </div>
+        )}
+        {notice && (
+          <div className="error" role="alert">
+            {notice}
+          </div>
+        )}
+        {conversation && page !== "conversation" && (
+          <button
+            className="resume-banner"
+            onClick={() => navigate("conversation")}
+          >
+            Return to your open practice →
+          </button>
+        )}
+        {content()}
+      </main>
+      <footer
+        className="site-footer"
+        inert={!preferences.onboarded ? true : undefined}
+      >
+        <span className="footer-brand">
+          <Leaf size={18} /> Your voice. Your needs. Your way.
+        </span>
+        <p>An educational prototype. Not therapy or crisis care.</p>
+        <button className="text-button" onClick={() => navigate("support")}>
+          Support & resources ↗
         </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      </footer>
+      {!preferences.onboarded && (
+        <div className="onboarding">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="welcome-title"
+            className="welcome-panel"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") update({ onboarded: true });
+              if (e.key === "Tab") {
+                const items = [
+                  ...e.currentTarget.querySelectorAll(
+                    "button,input,select,textarea,a[href]",
+                  ),
+                ].filter((el) => !el.disabled);
+                const first = items[0];
+                const last = items.at(-1);
+                if (e.shiftKey && document.activeElement === first) {
+                  e.preventDefault();
+                  last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                  e.preventDefault();
+                  first.focus();
+                }
+              }
+            }}
+          >
+            <div className="eyebrow">
+              <Leaf size={18} /> WELCOME TO TALKBUDDY
+            </div>
+            <h1 id="welcome-title">Let’s make this comfortable for you.</h1>
+            <p>
+              You can type, use cards, or speak. Everything is optional, and
+              there’s no rush.
+            </p>
+            <SettingsPanel preferences={preferences} update={update} />
+            <div className="button-row">
+              <button
+                autoFocus
+                className="primary"
+                onClick={() => update({ onboarded: true })}
+              >
+                Make yourself at home <ArrowRight size={18} />
+              </button>
+              <button onClick={() => update({ onboarded: true })}>
+                Skip for now
+              </button>
+            </div>
+            <small>
+              Practice uses external AI services. Please use fictional
+              situations and avoid sensitive details.
+            </small>
+          </section>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      )}
     </>
-  )
+  );
 }
-
-export default App
