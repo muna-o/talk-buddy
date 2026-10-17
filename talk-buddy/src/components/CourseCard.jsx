@@ -1,3 +1,4 @@
+import { courseTitle } from "../data/courseTitles";
 import {
   ArrowRight,
   HelpCircle,
@@ -10,12 +11,6 @@ const icons = {
   leaf: Leaf,
   shield: ShieldCheck,
   messages: MessagesSquare,
-};
-const titles = {
-  help: "Asking for help",
-  leaf: "Expressing your needs",
-  shield: "Setting boundaries",
-  messages: "Misunderstandings",
 };
 export default function CourseCard({
   lesson,
@@ -34,7 +29,7 @@ export default function CourseCard({
       </span>
       <span className="course-copy">
         {number && <span className="course-count">COURSE {number}</span>}
-        <h3>{titles[lesson.icon] || lesson.category}</h3>
+        <h3>{courseTitle(lesson)}</h3>
         <p>{lesson.description}</p>
         <span className="course-lesson-label">1 guided lesson</span>
       </span>

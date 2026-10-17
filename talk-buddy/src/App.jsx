@@ -208,8 +208,7 @@ export default function App() {
     if (page === "settings")
       return (
         <>
-          <div className="eyebrow">YOUR SPACE, YOUR PREFERENCES</div>
-          <h1>Make it feel like you.</h1>
+          <h1>Preferences</h1>
           <p className="lead">
             Choose what feels comfortable. Your preferences save automatically.
           </p>

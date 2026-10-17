@@ -1,5 +1,7 @@
+import { courseTitle } from "../data/courseTitles";
+import Whimsy from "../components/Whimsy";
 import { useState } from "react";
-import { ArrowRight, Check, BookOpen } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 export default function Lesson({ lesson, start, back }) {
   const [phase, setPhase] = useState(0);
   const [choice, setChoice] = useState(null);
@@ -29,10 +31,8 @@ export default function Lesson({ lesson, start, back }) {
         ))}
       </div>
       <section className="panel lesson-panel">
-        <div className="eyebrow">
-          <BookOpen size={18} /> {lesson.category}
-        </div>
-        <h1>{lesson.title}</h1>
+        <Whimsy className="lesson-star" />
+        <h1>{courseTitle(lesson)}</h1>
         {phase === 0 ? (
           <>
             <p className="lead">{lesson.introduction}</p>
@@ -42,14 +42,21 @@ export default function Lesson({ lesson, start, back }) {
                 <li key={o}>{o}</li>
               ))}
             </ul>
-            <aside>{lesson.scenario}</aside>
+            <aside className="scenario-context">
+              <strong>Scenario</strong>
+              <p>{lesson.scenario}</p>
+            </aside>
             <button className="primary" onClick={() => setPhase(1)}>
               Explore the situation <ArrowRight size={18} />
             </button>
           </>
         ) : (
           <>
-            <h2>{lesson.question}</h2>
+            <aside className="scenario-context">
+              <strong>Scenario</strong>
+              <p>{lesson.scenario}</p>
+            </aside>
+            <h2 className="practice-question">{lesson.question}</h2>
             <p>There can be more than one way that works for you.</p>
             <div className="choices">
               {lesson.choices.map((c, i) => (

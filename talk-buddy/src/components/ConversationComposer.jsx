@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Mic,
   Square,
-  Keyboard,
-  MessageSquare,
   Send,
   Pencil,
   Check,
@@ -38,13 +36,12 @@ export default function ConversationComposer({
   onSend,
   onError,
 }) {
-  const [mode, setMode] = useState(
+  const mode =
     preferences.communication === "cards"
       ? "cards"
       : preferences.communication === "speech"
         ? "speech"
-        : "typing",
-  );
+        : "typing";
   const [listening, setListening] = useState(false);
   const [selectedCard, setSelectedCard] = useState("");
   const [editingCard, setEditingCard] = useState(false);
@@ -63,12 +60,6 @@ export default function ConversationComposer({
   useEffect(() => {
     if (paused || busy) recognition.current?.abort();
   }, [paused, busy]);
-  function changeMode(next) {
-    active.current = false;
-    recognition.current?.abort();
-    setListening(false);
-    setMode(next);
-  }
   function dictate() {
     if (listening) {
       recognition.current?.stop();
@@ -111,49 +102,7 @@ export default function ConversationComposer({
   );
   return (
     <div className={`composer-area mode-${mode}`}>
-      <div
-        className="communication-modes"
-        role="tablist"
-        aria-label="How would you like to reply?"
-      >
-        {[
-          ["speech", "Speak", Mic],
-          ["typing", "Type", Keyboard],
-          ["cards", "Cards", MessageSquare],
-        ].map(([value, label, Icon]) => (
-          <button
-            key={value}
-            id={`mode-${value}`}
-            role="tab"
-            aria-selected={mode === value}
-            aria-controls="reply-panel"
-            tabIndex={mode === value ? 0 : -1}
-            onClick={() => changeMode(value)}
-            onKeyDown={(e) => {
-              if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key))
-                return;
-              e.preventDefault();
-              const order = ["speech", "typing", "cards"];
-              const next =
-                e.key === "Home"
-                  ? "speech"
-                  : e.key === "End"
-                    ? "cards"
-                    : order[
-                        (order.indexOf(mode) +
-                          (e.key === "ArrowRight" ? 1 : 2)) %
-                          3
-                      ];
-              changeMode(next);
-              document.getElementById(`mode-${next}`)?.focus();
-            }}
-          >
-            <Icon size={22} aria-hidden="true" />
-            {label}
-          </button>
-        ))}
-      </div>
-      <div id="reply-panel" role="tabpanel" aria-labelledby={`mode-${mode}`}>
+      <div id="reply-panel" aria-label="Your reply">
         {mode === "cards" ? (
           <>
             <div className="card-mode-heading">

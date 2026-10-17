@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { nextAutomaticReply } from "../services/audio.mjs";
+import { courseTitle } from "../data/courseTitles";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Square, Volume2, Pause, Play, RotateCcw } from "lucide-react";
 import { invoke } from "../services/supabase";
 import ConversationComposer from "./ConversationComposer";
@@ -12,7 +14,7 @@ export default function Conversation({
 }) {
   const [session, setSession] = useState(initial.session);
   const [messages, setMessages] = useState(initial.messages);
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState(initial.draft || "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [paused, setPaused] = useState(false);
@@ -23,6 +25,8 @@ export default function Conversation({
   const lock = useRef(false);
   const mounted = useRef(true);
   const soundAllowed = useRef(false);
+  const audioRequest = useRef(0);
+  const autoSpoken = useRef(new Set());
   useEffect(() => {
     soundAllowed.current = p.audioEnabled && !paused;
   }, [p.audioEnabled, paused]);
@@ -31,6 +35,7 @@ export default function Conversation({
     const cache = audioCache.current;
     return () => {
       mounted.current = false;
+      audioRequest.current += 1;
       audio.current?.pause();
       for (const url of cache.values()) URL.revokeObjectURL(url);
     };
@@ -40,39 +45,73 @@ export default function Conversation({
   }, [messages, busy]);
   useEffect(() => {
     if (!p.audioEnabled || paused) {
+      audioRequest.current += 1;
       audio.current?.pause();
     }
   }, [p.audioEnabled, paused]);
   const config = session.configuration;
-  async function play(message) {
-    if (!p.audioEnabled) return;
-    audio.current?.pause();
-    setPlaying(message.id);
-    setError("");
-    try {
-      const key = `${message.id}-${p.voice}`;
-      let url = audioCache.current.get(key);
-      if (!url) {
-        const blob = await invoke("tts", {
-          message_id: message.id,
-          voice_id: p.voice,
-        });
-        url = URL.createObjectURL(blob);
-        audioCache.current.set(key, url);
+  const play = useCallback(
+    async (message) => {
+      if (!p.audioEnabled) return;
+      const request = ++audioRequest.current;
+      audio.current?.pause();
+      setPlaying(message.id);
+      setError("");
+      try {
+        const key = `${message.id}-${p.voice}`;
+        let url = audioCache.current.get(key);
+        if (!url) {
+          const blob = await invoke("tts", {
+            message_id: message.id,
+            voice_id: p.voice,
+          });
+          if (!mounted.current) return;
+          url = URL.createObjectURL(blob);
+          audioCache.current.set(key, url);
+        }
+        if (!mounted.current) return;
+        if (request !== audioRequest.current) return;
+        if (!soundAllowed.current) {
+          setPlaying(null);
+          return;
+        }
+        audio.current = new Audio(url);
+        audio.current.onended = () => setPlaying(null);
+        audio.current.onpause = () => {
+          if (mounted.current) setPlaying(null);
+        };
+        await audio.current.play();
+      } catch (e) {
+        if (mounted.current && request === audioRequest.current) {
+          setError(
+            e.name === "NotAllowedError"
+              ? "Your browser paused automatic audio. Press Listen to start playback."
+              : e.message,
+          );
+          setPlaying(null);
+        }
       }
-      if (!mounted.current || !soundAllowed.current) return;
-      audio.current = new Audio(url);
-      audio.current.onended = () => setPlaying(null);
-      audio.current.onpause = () => {
-        if (mounted.current) setPlaying(null);
-      };
-      await audio.current.play();
-    } catch (e) {
-      if (mounted.current) {
-        setError(e.message);
-        setPlaying(null);
-      }
-    }
+    },
+    [p.audioEnabled, p.voice],
+  );
+  useEffect(() => {
+    const latest = nextAutomaticReply(
+      messages,
+      { audioEnabled: p.audioEnabled, autoSpeech: p.autoSpeech },
+      paused,
+      session.status,
+      autoSpoken.current,
+    );
+    if (!latest) return;
+    const timer = setTimeout(() => {
+      autoSpoken.current.add(latest.id);
+      void play(latest);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [messages, p.audioEnabled, p.autoSpeech, paused, session.status, play]);
+  function updateDraft(value) {
+    setDraft(value);
+    onUpdate({ session, messages, draft: value });
   }
   async function send(e) {
     e.preventDefault();
@@ -90,10 +129,8 @@ export default function Conversation({
       if (!mounted.current) return;
       setMessages(data.messages);
       setSession(data.session);
-      onUpdate({ session: data.session, messages: data.messages });
+      onUpdate({ session: data.session, messages: data.messages, draft: "" });
       setDraft("");
-      if (p.audioEnabled && p.autoSpeech && !data.safety_concern)
-        void play(data.messages.at(-1));
     } catch (e) {
       if (mounted.current) setError(e.message);
     } finally {
@@ -106,7 +143,9 @@ export default function Conversation({
     lock.current = true;
     setBusy(true);
     setError("");
+    audioRequest.current += 1;
     audio.current?.pause();
+    setPlaying(null);
     try {
       const data = await invoke("chat", {
         action: "end",
@@ -136,15 +175,26 @@ export default function Conversation({
   return (
     <div className="conversation-layout">
       <section className="chat panel">
+        <div className="chat-topic">
+          <h1>
+            {session.mode === "course" ? courseTitle(config) : "Free practice"}
+          </h1>
+        </div>
         <header className="chat-header">
           <div className="avatar">{config.character.name.slice(0, 1)}</div>
           <div>
-            <h1>{config.character.name}</h1>
+            <h2>{config.character.name}</h2>
             <p>{config.character.role} · AI practice partner</p>
           </div>
           <span className="badge">{config.difficulty}</span>
         </header>
-        <div className="scenario-strip">{config.scenario}</div>
+        <section
+          className="scenario-strip"
+          aria-labelledby="chat-scenario-heading"
+        >
+          <h2 id="chat-scenario-heading">Scenario</h2>
+          <p>{config.scenario}</p>
+        </section>
         <div
           className="chat-messages"
           role="log"
@@ -160,7 +210,9 @@ export default function Conversation({
                   className="audio-button"
                   onClick={() =>
                     playing === m.id
-                      ? (audio.current?.pause(), setPlaying(null))
+                      ? ((audioRequest.current += 1),
+                        audio.current?.pause(),
+                        setPlaying(null))
                       : void play(m)
                   }
                   aria-label={`${playing === m.id ? "Stop" : "Play"} message from ${config.character.name}`}
@@ -197,7 +249,7 @@ export default function Conversation({
         {session.status === "active" && (
           <ConversationComposer
             draft={draft}
-            setDraft={setDraft}
+            setDraft={updateDraft}
             preferences={p}
             config={config}
             paused={paused}
@@ -209,7 +261,14 @@ export default function Conversation({
         <footer className="chat-footer">
           <div className="practice-actions">
             {session.status === "active" && (
-              <button onClick={() => setPaused(!paused)}>
+              <button
+                onClick={() => {
+                  audioRequest.current += 1;
+                  audio.current?.pause();
+                  setPlaying(null);
+                  setPaused(!paused);
+                }}
+              >
                 {paused ? <Play size={18} /> : <Pause size={18} />}
                 {paused ? "Resume" : "Pause"}
               </button>

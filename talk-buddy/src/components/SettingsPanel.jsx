@@ -1,10 +1,20 @@
+import {
+  themeOptions,
+  communicationPreference,
+} from "../services/appearance.mjs";
 export default function SettingsPanel({ preferences: p, update, voices = [] }) {
   const select = (label, key, options) => (
     <label>
       {label}
       <select
         value={p[key]}
-        onChange={(e) => update({ [key]: e.target.value })}
+        onChange={(e) =>
+          update(
+            key === "communication"
+              ? communicationPreference(e.target.value)
+              : { [key]: e.target.value },
+          )
+        }
       >
         {options.map(([value, text]) => (
           <option key={value} value={value}>
@@ -23,7 +33,13 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       <input
         type="checkbox"
         checked={p[key]}
-        onChange={(e) => update({ [key]: e.target.checked })}
+        onChange={(e) =>
+          update(
+            key === "audioEnabled" && !e.target.checked
+              ? { audioEnabled: false, autoSpeech: false }
+              : { [key]: e.target.checked },
+          )
+        }
       />
     </label>
   );
@@ -32,16 +48,11 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       <section className="panel">
         <h2>Make yourself comfortable</h2>
         <p>You can change any of these at any time.</p>
-        {select("Color theme", "theme", [
-          ["sage", "Soft Sage"],
-          ["peach", "Warm Peach"],
-          ["blue", "Calm Blue"],
-          ["dark", "Dark"],
-          ["contrast", "High Contrast"],
-        ])}
+        {select("Color theme", "theme", themeOptions)}
         {select("Font", "font", [
           ["system", "Everyday readable"],
           ["readable", "Verdana — wider letter shapes"],
+          ["opendyslexic", "OpenDyslexic"],
         ])}
         <label>
           Text size: {p.fontSize}px
@@ -78,11 +89,15 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       </section>
       <section className="panel">
         <h2>Communication & sensory preferences</h2>
-        {select("Start conversations with", "communication", [
+        {select("Communication method", "communication", [
           ["typing", "Typing"],
           ["cards", "Communication cards"],
-          ["speech", "Speech input (optional)"],
+          ["speech", "Speaking — live transcription and spoken replies"],
         ])}
+        <small>
+          Speaking enables automatic partner audio. Your microphone starts only
+          when you press Start speaking.
+        </small>
         {toggle("Reduce motion", "reducedMotion")}
         {toggle("Simplify decorative elements", "clutter")}
         {toggle(
@@ -114,9 +129,9 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
               </small>
             )}
             {toggle(
-              "Automatically play new replies",
+              "Read every partner message automatically",
               "autoSpeech",
-              "Only enable if you want sound without pressing Play.",
+              "Read the opening and every new reply aloud, whether you type, speak, or use cards.",
             )}
           </>
         )}

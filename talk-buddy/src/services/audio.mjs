@@ -3,3 +3,21 @@ export function playableAudio(data) {
     throw new Error("Audio could not be read. Please try listening again.");
   return new Blob([data], { type: "audio/mpeg" });
 }
+
+export function nextAutomaticReply(
+  messages,
+  preferences,
+  paused,
+  status,
+  spokenIds,
+) {
+  if (
+    !preferences.audioEnabled ||
+    !preferences.autoSpeech ||
+    paused ||
+    status === "safety"
+  )
+    return null;
+  const latest = messages.findLast((message) => message.role === "assistant");
+  return latest && !spokenIds.has(latest.id) ? latest : null;
+}

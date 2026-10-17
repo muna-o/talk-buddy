@@ -1,9 +1,9 @@
+import Whimsy from "../components/Whimsy";
 import buddyHomeImage from "../assets/buddy-home-image.png";
 import {
   ArrowRight,
   BookOpen,
   HeartHandshake,
-  Leaf,
   MessageCircle,
   ShieldCheck,
   VolumeX,
@@ -15,17 +15,7 @@ export default function HomePage({ navigate, selectLesson }) {
     <>
       <section className="hero">
         <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="tiny-leaf">
-              <Leaf size={16} />
-            </span>{" "}
-            WELCOME TO TALKBUDDY
-          </div>
-          <h1>
-            Practice conversations.
-            <br />
-            <span>Be yourself.</span>
-          </h1>
+          <h1>Practice conversations</h1>
           <p>
             A comfortable space to explore conversations,
             <br className="desktop-break" /> practice self-advocacy, and find
@@ -38,10 +28,10 @@ export default function HomePage({ navigate, selectLesson }) {
         </div>
         <div className="buddy-illustration" aria-hidden="true">
           <div className="buddy-backdrop" />
-          <span className="buddy-speech-bubble">Ready when you are.</span>
+
           <img src={buddyHomeImage} alt="" className="buddy-home-image" />
-          <span className="buddy-doodle doodle-one">✦</span>
-          <span className="buddy-doodle doodle-two">✧</span>
+          <Whimsy className="hero-star-one" />
+          <Whimsy className="hero-star-two" />
         </div>
       </section>
       <section className="mode-section">
@@ -60,7 +50,6 @@ export default function HomePage({ navigate, selectLesson }) {
               <BookOpen size={28} />
             </span>
             <div>
-              <span className="eyebrow">A LITTLE GUIDANCE</span>
               <h2>Course Mode</h2>
               <p>
                 Explore guided lessons and practice useful conversation skills
@@ -80,7 +69,6 @@ export default function HomePage({ navigate, selectLesson }) {
               <MessageCircle size={28} />
             </span>
             <div>
-              <span className="eyebrow">MAKE IT YOUR OWN</span>
               <h2>Free Mode</h2>
               <p>
                 Have a conversation you’d like to practice? Create your own
@@ -95,6 +83,7 @@ export default function HomePage({ navigate, selectLesson }) {
         </div>
       </section>
       <section className="values-strip">
+        <Whimsy kind="clock" className="pace-doodle" />
         <div>
           <MessageCircle size={23} />
           <span>
@@ -119,7 +108,7 @@ export default function HomePage({ navigate, selectLesson }) {
       </section>
       <section className="featured">
         <div className="section-heading">
-          <h2>Useful skills for everyday moments</h2>
+          <h2>Explore the courses</h2>
           <button className="text-button" onClick={() => navigate("courses")}>
             View all lessons <ArrowRight size={17} />
           </button>
