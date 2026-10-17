@@ -1,31 +1,19 @@
 import { courseTitle } from "../data/courseTitles";
-import {
-  ArrowRight,
-  HelpCircle,
-  Leaf,
-  ShieldCheck,
-  MessagesSquare,
-} from "lucide-react";
-const icons = {
-  help: HelpCircle,
-  leaf: Leaf,
-  shield: ShieldCheck,
-  messages: MessagesSquare,
-};
+import { ArrowRight } from "lucide-react";
+import CourseIllustration from "./CourseIllustration";
 export default function CourseCard({
   lesson,
   onSelect,
   variant = "tile",
   number,
 }) {
-  const Icon = icons[lesson.icon];
   return (
     <button
       className={`course-card ${lesson.color} ${variant === "row" ? "course-row" : ""}`}
       onClick={() => onSelect(lesson)}
     >
       <span className="course-icon">
-        <Icon size={variant === "row" ? 34 : 28} aria-hidden="true" />
+        <CourseIllustration lesson={lesson} />
       </span>
       <span className="course-copy">
         {number && <span className="course-count">COURSE {number}</span>}

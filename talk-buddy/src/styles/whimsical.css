@@ -125,7 +125,7 @@
   height: 70px;
   transform: rotate(-15deg);
 }
-.lesson-panel > h1 {
+.lesson-course-heading h1 {
   font-size: 2.35rem;
   max-width: calc(100% - 60px);
   margin-top: 5px;
@@ -286,7 +286,7 @@
     width: 55px;
     height: 60px;
   }
-  .lesson-panel > h1 {
+  .lesson-course-heading h1 {
     font-size: 1.7rem;
     max-width: calc(100% - 35px);
     overflow-wrap: anywhere;
@@ -355,5 +355,100 @@ small {
   }
   .settings-grid h2 {
     font-size: 1.1rem;
+  }
+}
+
+/* The supplied drawings carry the same course identity throughout practice. */
+.brand-artwork {
+  width: 52px;
+  height: 44px;
+  margin-right: 7px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.brand-artwork img {
+  width: 64px;
+  height: 55px;
+  object-fit: contain;
+  transform: translateY(5px);
+}
+.course-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.course-icon {
+  padding: 5px;
+}
+.lesson-course-heading,
+.chat-topic {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lesson-course-heading {
+  padding-right: 50px;
+  margin-bottom: 22px;
+}
+.lesson-course-heading h1 {
+  margin: 0;
+  max-width: none;
+}
+.lesson-course-heading .course-illustration {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+}
+.chat-topic .course-illustration {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.courses-page .page-heading {
+  position: relative;
+  padding-right: 90px;
+}
+.courses-heading-star {
+  position: absolute;
+  right: 12px;
+  top: -7px;
+  width: 75px;
+  height: 80px;
+  transform: rotate(15deg);
+}
+.flow-note .lesson-format-clock {
+  width: 60px;
+  height: 64px;
+  flex-shrink: 0;
+  transform: rotate(-12deg);
+}
+[data-theme="dark"] .course-illustration,
+[data-theme="dark"] .brand-artwork img {
+  filter: invert(1);
+}
+@media (max-width: 760px) {
+  .brand-artwork {
+    width: 43px;
+    margin-right: 5px;
+  }
+  .brand-artwork img {
+    width: 54px;
+    height: 46px;
+  }
+  .lesson-course-heading {
+    gap: 12px;
+    padding-right: 24px;
+  }
+  .lesson-course-heading .course-illustration {
+    width: 52px;
+    height: 58px;
+  }
+  .chat-topic {
+    gap: 12px;
+  }
+  .chat-topic .course-illustration {
+    width: 46px;
+    height: 50px;
   }
 }

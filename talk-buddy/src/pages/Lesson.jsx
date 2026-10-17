@@ -1,5 +1,6 @@
 import { courseTitle } from "../data/courseTitles";
 import Whimsy from "../components/Whimsy";
+import CourseIllustration from "../components/CourseIllustration";
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 export default function Lesson({ lesson, start, back }) {
@@ -32,7 +33,10 @@ export default function Lesson({ lesson, start, back }) {
       </div>
       <section className="panel lesson-panel">
         <Whimsy className="lesson-star" />
-        <h1>{courseTitle(lesson)}</h1>
+        <div className="lesson-course-heading">
+          <CourseIllustration lesson={lesson} />
+          <h1>{courseTitle(lesson)}</h1>
+        </div>
         {phase === 0 ? (
           <>
             <p className="lead">{lesson.introduction}</p>

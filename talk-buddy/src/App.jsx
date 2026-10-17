@@ -1,4 +1,5 @@
 import Courses from "./pages/Courses";
+import logo from "./assets/logo.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   HeartHandshake,
   Home,
   Leaf,
-  MessageCircle,
   Settings,
   TrendingUp,
 } from "lucide-react";
@@ -257,12 +257,10 @@ export default function App() {
             onClick={() => navigate("home")}
             aria-label="TalkBuddy home"
           >
-            <span className="brand-mark">
-              <MessageCircle size={24} />
-              <Leaf size={12} />
+            <span className="brand-mark brand-artwork">
+              <img src={logo} alt="" />
             </span>
             talk<span>buddy</span>
-            <span className="beta">BETA</span>
           </button>
           <nav aria-label="Main navigation">
             {navigation.map(([id, Icon, label]) => (

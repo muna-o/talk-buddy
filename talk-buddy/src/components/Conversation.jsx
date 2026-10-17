@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Square, Volume2, Pause, Play, RotateCcw } from "lucide-react";
 import { invoke } from "../services/supabase";
 import ConversationComposer from "./ConversationComposer";
+import CourseIllustration from "./CourseIllustration";
 export default function Conversation({
   initial,
   preferences: p,
@@ -176,6 +177,7 @@ export default function Conversation({
     <div className="conversation-layout">
       <section className="chat panel">
         <div className="chat-topic">
+          {session.mode === "course" && <CourseIllustration lesson={config} />}
           <h1>
             {session.mode === "course" ? courseTitle(config) : "Free practice"}
           </h1>
