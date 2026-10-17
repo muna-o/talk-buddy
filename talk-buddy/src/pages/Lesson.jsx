@@ -1,6 +1,10 @@
+import { courseTitle } from "../data/courseTitles";
+import ListenButton from "../components/ListenButton";
+import Whimsy from "../components/Whimsy";
+import CourseIllustration from "../components/CourseIllustration";
 import { useState } from "react";
-import { ArrowRight, Check, BookOpen } from "lucide-react";
-export default function Lesson({ lesson, start, back }) {
+import { ArrowRight, Check } from "lucide-react";
+export default function Lesson({ lesson, start, back, voice }) {
   const [phase, setPhase] = useState(0);
   const [choice, setChoice] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -29,10 +33,11 @@ export default function Lesson({ lesson, start, back }) {
         ))}
       </div>
       <section className="panel lesson-panel">
-        <div className="eyebrow">
-          <BookOpen size={18} /> {lesson.category}
+        <Whimsy className="lesson-star" />
+        <div className="lesson-course-heading">
+          <CourseIllustration lesson={lesson} />
+          <h1>{courseTitle(lesson)}</h1>
         </div>
-        <h1>{lesson.title}</h1>
         {phase === 0 ? (
           <>
             <p className="lead">{lesson.introduction}</p>
@@ -42,14 +47,31 @@ export default function Lesson({ lesson, start, back }) {
                 <li key={o}>{o}</li>
               ))}
             </ul>
-            <aside>{lesson.scenario}</aside>
+            <aside className="scenario-context">
+              <strong>Scenario</strong>
+              <p>{lesson.scenario}</p>
+              <ListenButton
+                text={lesson.scenario}
+                voice={voice}
+                label="scenario"
+              />
+            </aside>
             <button className="primary" onClick={() => setPhase(1)}>
               Explore the situation <ArrowRight size={18} />
             </button>
           </>
         ) : (
           <>
-            <h2>{lesson.question}</h2>
+            <aside className="scenario-context">
+              <strong>Scenario</strong>
+              <p>{lesson.scenario}</p>
+              <ListenButton
+                text={lesson.scenario}
+                voice={voice}
+                label="scenario"
+              />
+            </aside>
+            <h2 className="practice-question">{lesson.question}</h2>
             <p>There can be more than one way that works for you.</p>
             <div className="choices">
               {lesson.choices.map((c, i) => (

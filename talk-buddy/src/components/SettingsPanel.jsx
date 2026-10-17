@@ -1,10 +1,20 @@
+import {
+  themeOptions,
+  communicationPreference,
+} from "../services/appearance.mjs";
 export default function SettingsPanel({ preferences: p, update, voices = [] }) {
   const select = (label, key, options) => (
     <label>
       {label}
       <select
         value={p[key]}
-        onChange={(e) => update({ [key]: e.target.value })}
+        onChange={(e) =>
+          update(
+            key === "communication"
+              ? communicationPreference(e.target.value)
+              : { [key]: e.target.value },
+          )
+        }
       >
         {options.map(([value, text]) => (
           <option key={value} value={value}>
@@ -32,16 +42,11 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       <section className="panel">
         <h2>Make yourself comfortable</h2>
         <p>You can change any of these at any time.</p>
-        {select("Color theme", "theme", [
-          ["sage", "Soft Sage"],
-          ["peach", "Warm Peach"],
-          ["blue", "Calm Blue"],
-          ["dark", "Dark"],
-          ["contrast", "High Contrast"],
-        ])}
+        {select("Color theme", "theme", themeOptions)}
         {select("Font", "font", [
           ["system", "Everyday readable"],
           ["readable", "Verdana — wider letter shapes"],
+          ["opendyslexic", "OpenDyslexic"],
         ])}
         <label>
           Text size: {p.fontSize}px
@@ -78,48 +83,40 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       </section>
       <section className="panel">
         <h2>Communication & sensory preferences</h2>
-        {select("Start conversations with", "communication", [
+        {select("Communication method", "communication", [
           ["typing", "Typing"],
           ["cards", "Communication cards"],
-          ["speech", "Speech input (optional)"],
+          ["speech", "Speaking — live transcription"],
         ])}
+        <small>
+          Your microphone starts only when you press Start speaking. Automatic
+          playback is a separate choice below.
+        </small>
         {toggle("Reduce motion", "reducedMotion")}
         {toggle("Simplify decorative elements", "clutter")}
         {toggle(
-          "Enable character audio",
-          "audioEnabled",
-          "Audio is off by default.",
+          "Automatically play partner replies",
+          "autoSpeech",
+          "Play the first reply when you enter a conversation and each new reply in your selected voice. Works with typing, cards, and speaking. You can always press Listen manually.",
         )}
-        {p.audioEnabled && (
-          <>
-            {select("Character voice", "voice", [
-              ["", "Default approved voice"],
-              ...voices.map((v) => [v.id, v.name]),
-            ])}
-            {voices.length > 0 && (
-              <small>
-                {
-                  (voices.find((v) => v.id === p.voice) || voices[0])
-                    .description
-                }
-              </small>
-            )}
+        <>
+          {select("Character voice", "voice", [
+            ["", "Default approved voice"],
+            ...voices.map((v) => [v.id, v.name]),
+          ])}
+          {voices.length > 0 && (
             <small>
-              Choose a voice for character replies. Playback needs the connected
-              voice service.
+              {(voices.find((v) => v.id === p.voice) || voices[0]).description}
             </small>
-            {!voices.length && (
-              <small>
-                Voice choices appear after ElevenLabs is configured.
-              </small>
-            )}
-            {toggle(
-              "Automatically play new replies",
-              "autoSpeech",
-              "Only enable if you want sound without pressing Play.",
-            )}
-          </>
-        )}
+          )}
+          <small>
+            Choose a voice for scenarios and character replies. Playback needs
+            the connected voice service.
+          </small>
+          {!voices.length && (
+            <small>Voice choices appear after ElevenLabs is configured.</small>
+          )}
+        </>
       </section>
     </div>
   );

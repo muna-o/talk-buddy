@@ -1,24 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  Send,
-  Mic,
-  Square,
-  Volume2,
-  Lightbulb,
-  MessageSquare,
-  Pause,
-  Play,
-  RotateCcw,
-} from "lucide-react";
+import { nextAutomaticReply } from "../services/audio.mjs";
+import { courseTitle } from "../data/courseTitles";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Square, Volume2, Pause, Play, RotateCcw } from "lucide-react";
 import { invoke } from "../services/supabase";
-import { startDictation } from "../services/speechRecognition";
-const generalCards = [
-  "I need help.",
-  "I need a break.",
-  "I’m not comfortable with that.",
-  "No, thank you.",
-  "Can we talk about this later?",
-];
+import ConversationComposer from "./ConversationComposer";
+import ListenButton from "./ListenButton";
+import CourseIllustration from "./CourseIllustration";
 export default function Conversation({
   initial,
   preferences: p,
@@ -29,32 +16,28 @@ export default function Conversation({
 }) {
   const [session, setSession] = useState(initial.session);
   const [messages, setMessages] = useState(initial.messages);
-  const [draft, setDraft] = useState("");
-  const [cards, setCards] = useState(p.communication === "cards");
-  const [hints, setHints] = useState(null);
-  const [showHints, setShowHints] = useState(false);
+  const [draft, setDraft] = useState(initial.draft || "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [paused, setPaused] = useState(false);
-  const [listening, setListening] = useState(false);
   const [playing, setPlaying] = useState(null);
-  const recognition = useRef(null);
   const audio = useRef(null);
   const audioCache = useRef(new Map());
-  const composer = useRef(null);
   const bottom = useRef(null);
   const lock = useRef(false);
   const mounted = useRef(true);
   const soundAllowed = useRef(false);
+  const audioRequest = useRef(0);
+  const autoSpoken = useRef(new Set());
   useEffect(() => {
-    soundAllowed.current = p.audioEnabled && !paused;
-  }, [p.audioEnabled, paused]);
+    soundAllowed.current = !paused;
+  }, [paused]);
   useEffect(() => {
     mounted.current = true;
     const cache = audioCache.current;
     return () => {
       mounted.current = false;
-      recognition.current?.abort();
+      audioRequest.current += 1;
       audio.current?.pause();
       for (const url of cache.values()) URL.revokeObjectURL(url);
     };
@@ -63,40 +46,84 @@ export default function Conversation({
     bottom.current?.scrollIntoView({ block: "nearest", behavior: "instant" });
   }, [messages, busy]);
   useEffect(() => {
-    if (!p.audioEnabled || paused) {
+    if (!p.autoSpeech || paused) {
+      audioRequest.current += 1;
       audio.current?.pause();
     }
-  }, [p.audioEnabled, paused]);
+  }, [p.autoSpeech, paused]);
+  useEffect(() => {
+    const stop = () => {
+      audioRequest.current += 1;
+      audio.current?.pause();
+      setPlaying(null);
+    };
+    window.addEventListener("talkbuddy-audio-start", stop);
+    return () => window.removeEventListener("talkbuddy-audio-start", stop);
+  }, []);
   const config = session.configuration;
-  async function play(message) {
-    if (!p.audioEnabled) return;
-    audio.current?.pause();
-    setPlaying(message.id);
-    setError("");
-    try {
-      const key = `${message.id}-${p.voice}`;
-      let url = audioCache.current.get(key);
-      if (!url) {
-        const blob = await invoke("tts", {
-          message_id: message.id,
-          voice_id: p.voice,
-        });
-        url = URL.createObjectURL(blob);
-        audioCache.current.set(key, url);
+  const play = useCallback(
+    async (message) => {
+      if (paused) return;
+      window.dispatchEvent(new Event("talkbuddy-audio-start"));
+      const request = ++audioRequest.current;
+      audio.current?.pause();
+      setPlaying(message.id);
+      setError("");
+      try {
+        const key = `${message.id}-${p.voice}`;
+        let url = audioCache.current.get(key);
+        if (!url) {
+          const blob = await invoke("tts", {
+            message_id: message.id,
+            voice_id: p.voice,
+          });
+          if (!mounted.current) return;
+          url = URL.createObjectURL(blob);
+          audioCache.current.set(key, url);
+        }
+        if (!mounted.current) return;
+        if (request !== audioRequest.current) return;
+        if (!soundAllowed.current) {
+          setPlaying(null);
+          return;
+        }
+        audio.current = new Audio(url);
+        audio.current.onended = () => setPlaying(null);
+        audio.current.onpause = () => {
+          if (mounted.current) setPlaying(null);
+        };
+        await audio.current.play();
+      } catch (e) {
+        if (mounted.current && request === audioRequest.current) {
+          setError(
+            e.name === "NotAllowedError"
+              ? "Your browser paused automatic audio. Press Listen to start playback."
+              : e.message,
+          );
+          setPlaying(null);
+        }
       }
-      if (!mounted.current || !soundAllowed.current) return;
-      audio.current = new Audio(url);
-      audio.current.onended = () => setPlaying(null);
-      audio.current.onpause = () => {
-        if (mounted.current) setPlaying(null);
-      };
-      await audio.current.play();
-    } catch (e) {
-      if (mounted.current) {
-        setError(e.message);
-        setPlaying(null);
-      }
-    }
+    },
+    [paused, p.voice],
+  );
+  useEffect(() => {
+    const latest = nextAutomaticReply(
+      messages,
+      { autoSpeech: p.autoSpeech },
+      paused,
+      session.status,
+      autoSpoken.current,
+    );
+    if (!latest) return;
+    const timer = setTimeout(() => {
+      autoSpoken.current.add(latest.id);
+      void play(latest);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [messages, p.autoSpeech, paused, session.status, play]);
+  function updateDraft(value) {
+    setDraft(value);
+    onUpdate({ session, messages, draft: value });
   }
   async function send(e) {
     e.preventDefault();
@@ -105,7 +132,6 @@ export default function Conversation({
     lock.current = true;
     setBusy(true);
     setError("");
-    recognition.current?.stop();
     try {
       const data = await invoke("chat", {
         action: "send",
@@ -115,12 +141,8 @@ export default function Conversation({
       if (!mounted.current) return;
       setMessages(data.messages);
       setSession(data.session);
-      onUpdate({ session: data.session, messages: data.messages });
-      setHints(data.suggested_responses);
-      setShowHints(false);
+      onUpdate({ session: data.session, messages: data.messages, draft: "" });
       setDraft("");
-      if (p.audioEnabled && p.autoSpeech && !data.safety_concern)
-        void play(data.messages.at(-1));
     } catch (e) {
       if (mounted.current) setError(e.message);
     } finally {
@@ -133,8 +155,9 @@ export default function Conversation({
     lock.current = true;
     setBusy(true);
     setError("");
-    recognition.current?.abort();
+    audioRequest.current += 1;
     audio.current?.pause();
+    setPlaying(null);
     try {
       const data = await invoke("chat", {
         action: "end",
@@ -148,35 +171,49 @@ export default function Conversation({
       setBusy(false);
     }
   }
-  function dictate() {
-    if (listening) {
-      recognition.current?.stop();
-      return;
+
+  async function restart() {
+    if (lock.current) return;
+    lock.current = true;
+    setBusy(true);
+    try {
+      await onRestart(session);
+    } finally {
+      lock.current = false;
+      if (mounted.current) setBusy(false);
     }
-    setError("");
-    recognition.current = startDictation(
-      (text) => setDraft(text.slice(0, 2000)),
-      setError,
-      () => setListening(false),
-    );
-    setListening(Boolean(recognition.current));
   }
-  function insert(text) {
-    setDraft(text);
-    composer.current?.focus();
-  }
+
   return (
     <div className="conversation-layout">
       <section className="chat panel">
+        <div className="chat-topic">
+          {session.mode === "course" && <CourseIllustration lesson={config} />}
+          <h1>
+            {session.mode === "course" ? courseTitle(config) : "Free practice"}
+          </h1>
+        </div>
         <header className="chat-header">
           <div className="avatar">{config.character.name.slice(0, 1)}</div>
           <div>
-            <h1>{config.character.name}</h1>
+            <h2>{config.character.name}</h2>
             <p>{config.character.role} · AI practice partner</p>
           </div>
           <span className="badge">{config.difficulty}</span>
         </header>
-        <div className="scenario-strip">{config.scenario}</div>
+        <section
+          className="scenario-strip"
+          aria-labelledby="chat-scenario-heading"
+        >
+          <h2 id="chat-scenario-heading">Scenario</h2>
+          <p>{config.scenario}</p>
+          <ListenButton
+            text={config.scenario}
+            voice={p.voice}
+            label="scenario"
+            disabled={paused}
+          />
+        </section>
         <div
           className="chat-messages"
           role="log"
@@ -187,12 +224,15 @@ export default function Conversation({
             <div className={`message ${m.role}`} key={m.id}>
               <small>{m.role === "user" ? "You" : config.character.name}</small>
               <p>{m.content}</p>
-              {m.role === "assistant" && p.audioEnabled && (
+              {m.role === "assistant" && (
                 <button
                   className="audio-button"
+                  disabled={paused}
                   onClick={() =>
                     playing === m.id
-                      ? (audio.current?.pause(), setPlaying(null))
+                      ? ((audioRequest.current += 1),
+                        audio.current?.pause(),
+                        setPlaying(null))
                       : void play(m)
                   }
                   aria-label={`${playing === m.id ? "Stop" : "Play"} message from ${config.character.name}`}
@@ -227,130 +267,44 @@ export default function Conversation({
           </p>
         )}
         {session.status === "active" && (
-          <div className="composer-area">
-            <div className="toolbar">
-              <button onClick={() => setCards(!cards)} aria-expanded={cards}>
-                <MessageSquare size={17} /> Cards
-              </button>
-              <button
-                onClick={() => setShowHints(!showHints)}
-                aria-expanded={showHints}
-              >
-                <Lightbulb size={17} /> Hint
-              </button>
-              <button
-                onClick={() => {
-                  setPaused(!paused);
-                  recognition.current?.stop();
-                }}
-              >
-                {paused ? <Play size={17} /> : <Pause size={17} />}
-                {paused ? "Resume" : "Pause"}
-              </button>
-            </div>
-            {showHints && (
-              <aside>
-                <strong>One option to consider</strong>
-                <p>
-                  You can name what you need, ask for a change, or choose to
-                  leave.
-                </p>
-                {hints?.map((h) => (
-                  <button className="phrase" key={h} onClick={() => insert(h)}>
-                    {h}
-                  </button>
-                ))}
-              </aside>
-            )}
-            {cards && (
-              <div
-                className="communication-cards"
-                aria-label="Communication cards"
-              >
-                {[...new Set([...(config.cards || []), ...generalCards])].map(
-                  (c) => (
-                    <button key={c} onClick={() => insert(c)} disabled={paused}>
-                      {c}
-                    </button>
-                  ),
-                )}
-              </div>
-            )}
-            <form onSubmit={send}>
-              <label className="sr-only" htmlFor="message">
-                Your message
-              </label>
-              <textarea
-                id="message"
-                ref={composer}
-                rows={2}
-                maxLength={2000}
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                disabled={paused || busy}
-                placeholder="Type what works for you…"
-              />
-              <div className="compose-actions">
-                <button
-                  type="button"
-                  onClick={dictate}
-                  disabled={paused || busy}
-                  aria-pressed={listening}
-                >
-                  <Mic size={18} />
-                  {listening ? "Stop listening" : "Speak"}
-                </button>
-                <small>{draft.length}/2000</small>
-                <button
-                  className="primary"
-                  disabled={busy || paused || !draft.trim()}
-                >
-                  <Send size={17} /> Send
-                </button>
-              </div>
-            </form>
-            <small>
-              Speech transcription stays editable. Nothing sends until you press
-              Send.
-            </small>
-          </div>
+          <ConversationComposer
+            draft={draft}
+            setDraft={updateDraft}
+            preferences={p}
+            config={config}
+            paused={paused}
+            busy={busy}
+            onSend={send}
+            onError={setError}
+          />
         )}
         <footer className="chat-footer">
-          <span>No rush. You’re in control.</span>
-          <button onClick={end} disabled={busy}>
+          <div className="practice-actions">
+            {session.status === "active" && (
+              <button
+                onClick={() => {
+                  audioRequest.current += 1;
+                  audio.current?.pause();
+                  setPlaying(null);
+                  setPaused(!paused);
+                }}
+              >
+                {paused ? <Play size={18} /> : <Pause size={18} />}
+                {paused ? "Resume" : "Pause"}
+              </button>
+            )}
+            <button onClick={() => void restart()} disabled={busy}>
+              <RotateCcw size={17} />
+              Start a new practice
+            </button>
+          </div>
+          <button className="primary" onClick={end} disabled={busy}>
             {session.status === "active"
               ? "End & reflect"
               : "Continue to reflection"}
           </button>
         </footer>
       </section>
-      <aside className="practice-sidebar">
-        <div className="panel">
-          <div className="eyebrow">A SPACE TO PRACTICE</div>
-          <h2>{config.title}</h2>
-          <p>There’s no perfect response. Try words that feel like yours.</p>
-          {config.objectives?.length > 0 && (
-            <ul>
-              {config.objectives.map((o) => (
-                <li key={o}>{o}</li>
-              ))}
-            </ul>
-          )}
-          <p>
-            <strong>{session.turn_count} of 20</strong> practice turns used. End
-            whenever you want.
-          </p>
-        </div>
-        <div className="panel soft">
-          <h3>A little reminder</h3>
-          <p>
-            Your needs matter. Taking a break or saying no is always an option.
-          </p>
-          <button onClick={() => void onRestart(session)} disabled={busy}>
-            <RotateCcw size={16} /> Start a new practice
-          </button>
-        </div>
-      </aside>
     </div>
   );
 }

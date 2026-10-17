@@ -1,3 +1,6 @@
+import Courses from "./pages/Courses";
+import Whimsy from "./components/Whimsy";
+import logo from "./assets/logo.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -7,14 +10,11 @@ import {
   HeartHandshake,
   Home,
   Leaf,
-  MessageCircle,
   Settings,
   TrendingUp,
 } from "lucide-react";
-import lessons from "./data/lessons.json";
 import { applyPreferences, readPreferences } from "./services/preferences";
 import { configured, getUser, invoke, supabase } from "./services/supabase";
-import CourseCard from "./components/CourseCard";
 import SettingsPanel from "./components/SettingsPanel";
 import Conversation from "./components/Conversation";
 import Lesson from "./pages/Lesson";
@@ -170,42 +170,19 @@ export default function App() {
     }
   }
   const content = () => {
-    if (page === "courses")
-      return (
-        <>
-          <div className="eyebrow">SMALL STEPS, USEFUL SKILLS</div>
-          <h1>Find your starting point.</h1>
-          <p className="lead">
-            Four ways to practice speaking up for yourself. Start wherever feels
-            useful.
-          </p>
-          <div className="course-grid">
-            {lessons.map((l) => (
-              <CourseCard key={l.id} lesson={l} onSelect={selectLesson} />
-            ))}
-          </div>
-          <aside className="flow-note">
-            <BookOpen size={22} />
-            <div>
-              <strong>A little learning. A little practice.</strong>
-              <p>
-                Each lesson follows Learn → Explore → Practice → Reflect. No
-                timer, no score.
-              </p>
-            </div>
-          </aside>
-        </>
-      );
+    if (page === "courses") return <Courses onSelect={selectLesson} />;
     if (page === "lesson" && lesson)
       return (
         <Lesson
           key={lesson.id}
           lesson={lesson}
+          voice={preferences.voice}
           start={start}
           back={() => navigate("courses")}
         />
       );
-    if (page === "free") return <FreeMode start={start} />;
+    if (page === "free")
+      return <FreeMode start={start} voice={preferences.voice} />;
     if (page === "conversation" && conversation)
       return (
         <Conversation
@@ -234,8 +211,7 @@ export default function App() {
     if (page === "settings")
       return (
         <>
-          <div className="eyebrow">YOUR SPACE, YOUR PREFERENCES</div>
-          <h1>Make it feel like you.</h1>
+          <h1>Preferences</h1>
           <p className="lead">
             Choose what feels comfortable. Your preferences save automatically.
           </p>
@@ -248,9 +224,9 @@ export default function App() {
             <h2>Your privacy</h2>
             <p>
               Practice messages are stored in Supabase and sent to Google
-              Gemini. Playing a reply sends that text to ElevenLabs. Browser
-              speech recognition may use your browser provider’s speech service.
-              TalkBuddy does not store raw voice recordings.
+              Gemini. Playing a scenario or reply sends that text to ElevenLabs.
+              Browser speech recognition may use your browser provider’s speech
+              service. TalkBuddy does not store raw voice recordings.
             </p>
             <p>
               This hackathon prototype is for fictional practice. Google’s free
@@ -284,12 +260,10 @@ export default function App() {
             onClick={() => navigate("home")}
             aria-label="TalkBuddy home"
           >
-            <span className="brand-mark">
-              <MessageCircle size={24} />
-              <Leaf size={12} />
+            <span className="brand-mark brand-artwork">
+              <img src={logo} alt="" />
             </span>
             talk<span>buddy</span>
-            <span className="beta">BETA</span>
           </button>
           <nav aria-label="Main navigation">
             {navigation.map(([id, Icon, label]) => (
@@ -320,6 +294,14 @@ export default function App() {
           </div>
         </div>
       </header>
+      <div className="page-doodles" aria-hidden="true">
+        <Whimsy className="edge-doodle edge-one" />
+        <Whimsy kind="clock" className="edge-doodle edge-two" />
+        <Whimsy className="edge-doodle edge-three" />
+        <Whimsy className="edge-doodle edge-four" />
+        <Whimsy kind="clock" className="edge-doodle edge-five" />
+        <Whimsy className="edge-doodle edge-six" />
+      </div>
       <main
         id="main"
         tabIndex={-1}
@@ -354,9 +336,6 @@ export default function App() {
         className="site-footer"
         inert={!preferences.onboarded ? true : undefined}
       >
-        <span className="footer-brand">
-          <Leaf size={18} /> Your voice. Your needs. Your way.
-        </span>
         <p>An educational prototype. Not therapy or crisis care.</p>
         <button className="text-button" onClick={() => navigate("support")}>
           Support & resources ↗

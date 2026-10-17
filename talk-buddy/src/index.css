@@ -319,7 +319,7 @@ main {
   padding: 14px 0;
 }
 .hero h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-family);
   font-size: 4.2rem;
   line-height: 1.07;
   letter-spacing: -2px;
@@ -409,7 +409,7 @@ main {
   position: absolute;
   top: 303px;
   left: 32%;
-  font-family: Georgia, serif;
+  font-family: var(--font-family);
   font-style: italic;
   font-size: 0.92rem;
   color: var(--muted);
@@ -481,7 +481,7 @@ main {
   margin: 0;
 }
 .handwritten {
-  font-family: Georgia, serif;
+  font-family: var(--font-family);
   font-size: 0.85rem;
   font-style: italic;
   color: var(--muted);
@@ -1041,7 +1041,7 @@ blockquote {
   box-shadow: 0 20px 100px #0002;
 }
 .welcome-panel h1 {
-  font-family: Georgia, serif;
+  font-family: var(--font-family);
   font-weight: 400;
   font-size: 2.6rem;
 }

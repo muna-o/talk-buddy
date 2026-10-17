@@ -1,12 +1,11 @@
+import Whimsy from "../components/Whimsy";
+import buddyHomeImage from "../assets/buddy-home-image.png";
 import {
   ArrowRight,
   BookOpen,
-  Check,
   HeartHandshake,
-  Leaf,
   MessageCircle,
   ShieldCheck,
-  Sparkles,
   VolumeX,
 } from "lucide-react";
 import CourseCard from "../components/CourseCard";
@@ -16,19 +15,7 @@ export default function HomePage({ navigate, selectLesson }) {
     <>
       <section className="hero">
         <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="tiny-leaf">
-              <Leaf size={16} />
-            </span>{" "}
-            A LITTLE PRACTICE. A LITTLE MORE CONFIDENCE.
-          </div>
-          <h1>
-            Your voice.
-            <br />
-            Your needs.
-            <br />
-            <em>Your way.</em>
-          </h1>
+          <h1>Practice conversations</h1>
           <p>
             A comfortable space to explore conversations,
             <br className="desktop-break" /> practice self-advocacy, and find
@@ -39,28 +26,12 @@ export default function HomePage({ navigate, selectLesson }) {
             practice.
           </div>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="art-circle"></div>
-          <div className="art-note note-one">
-            <span className="note-avatar">you</span>I need a little more time.
-            <span className="note-check">
-              <Check size={16} />
-            </span>
-          </div>
-          <div className="art-note note-two">
-            <span className="note-avatar partner">
-              <Leaf size={21} />
-            </span>
-            Of course. Take your time.
-          </div>
-          <div className="plant">
-            <span></span>
-            <span></span>
-            <span></span>
-            <i></i>
-          </div>
-          <span className="art-caption">A space to be yourself.</span>
-          <Sparkles className="art-spark" size={30} />
+        <div className="buddy-illustration" aria-hidden="true">
+          <div className="buddy-backdrop" />
+
+          <img src={buddyHomeImage} alt="" className="buddy-home-image" />
+          <Whimsy className="hero-star-one" />
+          <Whimsy className="hero-star-two" />
         </div>
       </section>
       <section className="mode-section">
@@ -69,7 +40,6 @@ export default function HomePage({ navigate, selectLesson }) {
             <h2>Where would you like to begin?</h2>
             <p>Choose your own pace. You can always change direction.</p>
           </div>
-          <span className="handwritten">One conversation at a time.</span>
         </div>
         <div className="mode-grid">
           <button
@@ -80,7 +50,6 @@ export default function HomePage({ navigate, selectLesson }) {
               <BookOpen size={28} />
             </span>
             <div>
-              <span className="eyebrow">A LITTLE GUIDANCE</span>
               <h2>Course Mode</h2>
               <p>
                 Explore guided lessons and practice useful conversation skills
@@ -100,7 +69,6 @@ export default function HomePage({ navigate, selectLesson }) {
               <MessageCircle size={28} />
             </span>
             <div>
-              <span className="eyebrow">MAKE IT YOUR OWN</span>
               <h2>Free Mode</h2>
               <p>
                 Have a conversation you’d like to practice? Create your own
@@ -115,6 +83,7 @@ export default function HomePage({ navigate, selectLesson }) {
         </div>
       </section>
       <section className="values-strip">
+        <Whimsy kind="clock" className="pace-doodle" />
         <div>
           <MessageCircle size={23} />
           <span>
@@ -139,7 +108,7 @@ export default function HomePage({ navigate, selectLesson }) {
       </section>
       <section className="featured">
         <div className="section-heading">
-          <h2>Useful skills for everyday moments</h2>
+          <h2>Explore the courses</h2>
           <button className="text-button" onClick={() => navigate("courses")}>
             View all lessons <ArrowRight size={17} />
           </button>

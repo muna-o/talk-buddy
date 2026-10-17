@@ -1,3 +1,4 @@
+import { playableAudio } from "./audio.mjs";
 import { functionErrorMessage } from "./functionErrors.mjs";
 import { createClient } from "@supabase/supabase-js";
 export const configured = Boolean(
@@ -39,7 +40,7 @@ export async function invoke(name, body) {
       await functionErrorMessage(name, error, window.location.origin),
     );
   }
-  return data;
+  return name === "tts" ? playableAudio(data) : data;
 }
 export async function recentSessions() {
   const user = await getUser();

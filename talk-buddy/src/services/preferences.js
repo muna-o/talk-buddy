@@ -1,11 +1,11 @@
+import { fontFamily } from "./appearance.mjs";
 export const defaults = {
-  theme: "sage",
+  theme: "gray",
   font: "system",
   fontSize: 17,
   lineSpacing: 1.65,
   letterSpacing: 0,
   reducedMotion: true,
-  audioEnabled: false,
   autoSpeech: false,
   clutter: false,
   communication: "typing",
@@ -30,10 +30,5 @@ export function applyPreferences(p) {
   el.style.setProperty("--font-size", `${p.fontSize}px`);
   el.style.setProperty("--line-height", p.lineSpacing);
   el.style.setProperty("--letter-spacing", `${p.letterSpacing}px`);
-  el.style.setProperty(
-    "--font-family",
-    p.font === "readable"
-      ? "Verdana, sans-serif"
-      : '"Trebuchet MS", system-ui, sans-serif',
-  );
+  el.style.setProperty("--font-family", fontFamily(p.font));
 }
