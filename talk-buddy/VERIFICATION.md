@@ -2,7 +2,7 @@
 
 ## Executed successfully
 
-- `npm test`: 23 tests pass, covering input/output validation, urgent-risk signals vs ordinary boundary practice, resource IDs, the approved voice catalog, server voice enablement, connection-error messages, exact browser-origin checks and provider error categories.
+- `npm test`: 27 tests pass, covering input/output validation, urgent-risk signals vs ordinary boundary practice, resource IDs, the approved voice catalog, server voice enablement, connection-error messages, exact browser-origin checks and provider error categories.
 - `npm run lint`: clean.
 - Production frontend build passed after the connection-error and CORS fixes. Subsequent changes concern backend provider error handling, the server model default, tests and documentation.
 - Mocked-service Chrome tests covered onboarding, all four guided lesson flows, cards, typing, pause/resume, hints, speech fallback, preserving a draft after failure, navigation back to a conversation, reflections, Free Mode, TTS failure fallback, theme persistence, mobile layout and history deletion. No browser runtime errors. Desktop and 390px mobile screenshots inspected visually.
@@ -10,7 +10,7 @@
 ## Live Supabase verification
 
 - Anonymous authentication succeeded. CLI project access is linked to `iekryelbfsnyqfmszzpi`.
-- Both migrations applied successfully to the previously empty public schema.
+- The two foundation migrations applied to the empty public schema; the third curriculum migration later updated titles, scenarios and choices without changing saved conversations.
 - `chat`, `reflection`, and `tts` deployed successfully through the Supabase API.
 - Preflight accepts `http://127.0.0.1:5173` and `http://localhost:5173`.
 - The authenticated voice catalog returns Max, Mark, Ava, and Cecilia O’Connor.
@@ -29,3 +29,11 @@
 - Browser speech transcription events were simulated for deterministic tests. Actual microphone recognition on the user’s hardware has not been verified.
 - Vercel deployment, custom background uploads, full keyboard/screen-reader auditing, and comprehensive RLS testing remain outstanding.
 - No private API key is committed. Public browser Supabase configuration lives in ignored `.env.local`. Private provider secrets remain in Supabase.
+
+## Latest simplified interface checks
+
+- Chrome tests with mocked services verified settings-only communication methods, draft retention through Settings, automatic opening/new replies in speaking and typing, automatic-audio opt-out, retained card editing, two-step Free Practice and back navigation, richer lesson context, updated home copy, and supplied decorative assets.
+- Real OpenDyslexic WOFF2 loaded in Chrome. All nine themes were checked for main/muted/accent text contrast on their surface colors (at least 4.5:1); this is a targeted check, not a complete accessibility audit.
+- Mobile at 390px with OpenDyslexic and 24px body text stays within the viewport. Preferences and theme/font choices persist after reload. Screenshots inspected visually.
+- A separate unmocked browser check displayed the newly migrated scenario and automatically decoded/played the opening ElevenLabs audio without clicking Listen. Audio was muted during the test. Its fictional conversation was deleted afterward.
+- Card categories remain a written proposal only. Browser speech events remain simulated for deterministic checks; real microphone recognition on the user's hardware is not claimed.

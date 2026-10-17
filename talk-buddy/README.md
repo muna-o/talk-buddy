@@ -7,7 +7,7 @@ A React + Vite educational prototype for self-advocacy and conversation practice
 ## What is implemented
 
 - Warm responsive home, four complete lesson definitions, Learn → Explore → Practice → Reflect, custom Free Mode, shared conversation interface, progress, settings and support resources.
-- Five themes, adjustable text/spacing, readable font options, reduced motion, optional audio, local preferences and Supabase preference sync.
+- Nine themes, adjustable text/spacing, self-hosted OpenDyslexic and readable font options, reduced motion, optional audio, local preferences and Supabase preference sync.
 - Supabase anonymous authentication; owner-scoped sessions, messages and reflections; atomic turn saving; server-controlled curriculum; 20-turn session limit; per-user API quotas (100/hour, 400/day).
 - Gemini structured conversation and reflection functions, ElevenLabs on-demand audio of saved authorized messages, approved voice selection, in-memory audio cache, editable optional browser speech transcription.
 - History resume and deletion; no raw voice storage; private keys never enter the frontend.
@@ -118,7 +118,7 @@ Manual live acceptance path after deployment:
 
 A conservative server check and model context check can pause urgent-risk interactions and direct users to real-world support. This is not comprehensive crisis detection; ordinary fictional boundary lessons should continue. US crisis details were obtained through the local helpline tool. ASHA ProFind and ASAN links were verified against their official sites.
 
-Not yet implemented: uploaded custom backgrounds, a licensed dyslexia-specific font, account upgrade/recovery, educator tools and more than one lesson per category. The alternative readable font is Verdana and is not labeled a dyslexia font. Anonymous data is tied to the browser session; clearing storage may lose access. The prototype has no automatic anonymous-account retention cleanup. Progress lists the latest 50 sessions and counts ended sessions with at least one learner message as practice, not demonstrated mastery.
+Not yet implemented: uploaded custom backgrounds, account upgrade/recovery, educator tools and more than one lesson per category. OpenDyslexic is an optional personal preference, not a claim that one font benefits everyone. The original regular/bold WOFF2 files and their SIL Open Font License are bundled in `public/fonts/`. Anonymous data is tied to the browser session; clearing storage may lose access. The prototype has no automatic anonymous-account retention cleanup. Progress lists the latest 50 sessions and counts ended sessions with at least one learner message as practice, not demonstrated mastery.
 
 No public deployment, paid service requests, database migration execution or live Gemini/ElevenLabs success is implied by this source code. Those require configuration and separate verification.
 
@@ -158,7 +158,7 @@ The CLI may ask for the database password while linking; enter it directly in yo
 
 ## Live backend status — October 17, 2026
 
-The project is linked, both migrations are applied, and `chat`, `reflection`, and `tts` are deployed. The original missing-function/table 404 is resolved. Both local preview origins are enabled. Live tests verified course creation, a Gemini reply with saved messages, a saved reflection, a Free Mode opening, and owner isolation for sessions/messages plus rejection of direct message inserts. The browser’s Begin conversation flow was also verified against the live backend.
+The project is linked, all three migrations are applied, and `chat`, `reflection`, and `tts` are deployed. The original missing-function/table 404 is resolved. Both local preview origins are enabled. Live tests verified course creation, a Gemini reply with saved messages, a saved reflection, a Free Mode opening, and owner isolation for sessions/messages plus rejection of direct message inserts. The browser’s Begin conversation flow was also verified against the live backend.
 
 The initial Gemini 3.8 Flash request timed out. The deployed model is now `gemini-3.5-flash-lite`, which passed live chat, reflection and Free Mode tests. Its configurable default and environment template match that deployment. Official model reference: https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
 
@@ -170,4 +170,13 @@ The frontend has not been deployed to Vercel. Replace the local allowed origins 
 
 Courses are presented as wide vertical rows using their category names. Home uses the supplied transparent illustration and a sans-serif heading. Free practice keeps scenario/partner setup with styled native selects and explicit custom role/personality fields.
 
-The centered conversation has three keyboard-accessible reply modes: **Speak**, **Type**, and **Cards**. Cards fill the input panel with larger phrases; selecting one opens a review area with optional editing before Send. Typing and microphone controls are hidden in Cards mode. Speak shows a prominent recording button and streams interim browser transcription into an editable draft. Nothing sends automatically. Switching modes or leaving practice stops speech capture. Browser support and microphone permission are still required for speech; typing and cards remain available. The Hint control and practice sidebar have been removed, and restart/pause/end controls are grouped at the bottom of the chat.
+The conversation shows only the communication method selected in Preferences: **Speaking**, **Typing**, or **Communication cards**. Method selectors are not shown in the chat. Cards fill the input panel with larger phrases; selecting one opens a review area with optional editing before Send. Typing and microphone controls are hidden in Cards mode. Speak shows a prominent recording button and streams interim browser transcription into an editable draft. Nothing sends automatically. Visiting Settings or leaving practice stops speech capture. The current draft survives a trip to Settings and back to the open practice. Browser support and microphone permission are still required for speech; typing and cards remain available. The Hint control and practice sidebar have been removed, and restart/pause/end controls are grouped at the bottom of the chat.
+
+## Simplified whimsical iteration
+
+- Home uses the supplied clock and star doodles, the heading “Practice conversations,” and “Explore the courses.” The speech bubble was removed. Decorative drawings respect the simplified-visuals setting.
+- Preferences offers OpenDyslexic, four additional themes (Lavender, Rose, Sunflower, Ocean), and one place to choose the communication method.
+- Choosing Speaking enables character audio and automatic reading; microphone recording still requires an explicit click. “Read every partner message automatically” also works in typing and cards, includes the opening and new replies, and can be disabled. Browsers may block autoplay; Listen remains the fallback.
+- Course titles replace the old decorative lesson titles. Four richer situations and revised choices are in the frontend and curriculum migration `202610170003_richer_lesson_context.sql`, applied to the hosted database. Existing conversation configurations remain historical snapshots.
+- Free Practice is a two-step form: situation/difficulty, then partner/personality. Back navigation retains all values.
+- Expanded/categorized communication cards are **not implemented**. See [the research-informed proposal](docs/communication-cards-proposal.md).
