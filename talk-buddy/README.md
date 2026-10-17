@@ -67,7 +67,7 @@ Copy `.env.functions.example` to **`.env.functions.local`** (ignored by Git) and
 
 ```dotenv
 GEMINI_API_KEY=your_private_key
-GEMINI_MODEL=gemini-3.8-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 ELEVENLABS_API_KEY=your_private_key
 ELEVENLABS_VOICE_IDS=first_approved_voice_id,second_approved_voice_id
 ALLOWED_ORIGIN=http://localhost:5173
@@ -155,3 +155,13 @@ npx --yes supabase functions deploy tts
 ```
 
 The CLI may ask for the database password while linking; enter it directly in your terminal. Add Gemini and ElevenLabs secrets as described above. For local development `ALLOWED_ORIGIN` can contain both `http://localhost:5173,http://127.0.0.1:5173`. Production should list only exact approved frontend origins. Requests from unapproved browser origins do not receive an allow-origin header; authentication is still checked server-side.
+
+## Live backend status — October 17, 2026
+
+The project is linked, both migrations are applied, and `chat`, `reflection`, and `tts` are deployed. The original missing-function/table 404 is resolved. Both local preview origins are enabled. Live tests verified course creation, a Gemini reply with saved messages, a saved reflection, a Free Mode opening, and owner isolation for sessions/messages plus rejection of direct message inserts. The browser’s Begin conversation flow was also verified against the live backend.
+
+The initial Gemini 3.8 Flash request timed out. The deployed model is now `gemini-3.5-flash-lite`, which passed live chat, reflection and Free Mode tests. Its configurable default and environment template match that deployment. Official model reference: https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
+
+ElevenLabs audio was attempted live but the provider reported unavailable credits. Check the ElevenLabs account’s usage/credit balance before retrying audio. No successful audio-generation claim is made. The deployed TTS function now distinguishes invalid keys, missing TTS permission, unavailable voices, credits, and rate limits.
+
+The frontend has not been deployed to Vercel. Replace the local allowed origins with the exact approved HTTPS origin when deploying publicly.

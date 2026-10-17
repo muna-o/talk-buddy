@@ -1,3 +1,4 @@
+import { voiceServiceError } from "../_shared/providerErrors.mjs";
 import { configuredVoices } from "../_shared/voices.mjs";
 import { check, context, responses, sessionFor } from "../_shared/core.ts";
 import { validUUID } from "../_shared/validation.mjs";
@@ -42,12 +43,15 @@ Deno.serve(async (req) => {
         }),
       },
     );
-    if (!response.ok)
-      throw new Error(
-        response.status === 429
-          ? "Voice quota reached. You can continue with text."
-          : "Audio unavailable. Check ElevenLabs credentials and credits. Text is still available.",
-      );
+    if (!response.ok) {
+      let code;
+      try {
+        code = (await response.json()).detail?.status;
+      } catch {
+        /* Provider may return a non-JSON error. */
+      }
+      throw new Error(voiceServiceError(response.status, code));
+    }
     return new Response(await response.arrayBuffer(), {
       headers: {
         ...cors,

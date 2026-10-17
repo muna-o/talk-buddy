@@ -1,15 +1,28 @@
 # Verification — October 17, 2026
 
-Executed successfully:
+## Executed successfully
 
-- `npm test`: 9 tests pass. Includes the four approved voice labels, explicit server enablement, rejection of unknown voice IDs, and deterministic voice order. Covers rejected empty/oversized/non-text input, structured reply and reflection validation, urgent-risk signals vs ordinary boundary practice, and resource identifiers.
-- `npm run lint`: clean, with no warnings.
-- `npm run build`: production bundle generated successfully.
-- Headless installed Chrome via Playwright: mocked-service browser flow passed for onboarding, all four lesson introductions and guided answers, communication cards, typing/send, pause/resume, hints, speech failure fallback, keeping drafts after API failures, navigation back to an open conversation, reflection, custom Free Mode, ElevenLabs failure fallback, theme persistence across reload, history deletion, and mobile width 390px. No page runtime errors.
-- Desktop (1440px) and mobile (390px) screenshots inspected visually.
-- Supabase public endpoint live test: initially returned HTTP 422 `anonymous_provider_disabled`. After the owner enabled anonymous sign-in, a second live check succeeded and created one anonymous test user. No auth tokens were printed or saved by that check.
-- `npm install` audit reported zero known vulnerabilities at installation time.
+- `npm test`: 16 tests pass, covering input/output validation, urgent-risk signals vs ordinary boundary practice, resource IDs, the approved voice catalog, server voice enablement, connection-error messages, exact browser-origin checks and provider error categories.
+- `npm run lint`: clean.
+- Production frontend build passed after the connection-error and CORS fixes. Subsequent changes concern backend provider error handling, the server model default, tests and documentation.
+- Mocked-service Chrome tests covered onboarding, all four guided lesson flows, cards, typing, pause/resume, hints, speech fallback, preserving a draft after failure, navigation back to a conversation, reflections, Free Mode, TTS failure fallback, theme persistence, mobile layout and history deletion. No browser runtime errors. Desktop and 390px mobile screenshots inspected visually.
 
-Not live-verified: database migration execution, owner isolation/RLS against the hosted database, Gemini replies, ElevenLabs speech generation, Edge Function runtime deployment, or Vercel deployment. All browser API responses were explicitly mocked for those tests. No claim of complete end-to-end service functionality is made.
+## Live Supabase verification
 
-The private Supabase secret shared in chat was not persisted. It should be revoked in the dashboard. Only the supplied public Supabase URL and publishable key are stored in ignored `.env.local`.
+- Anonymous authentication succeeded. CLI project access is linked to `iekryelbfsnyqfmszzpi`.
+- Both migrations applied successfully to the previously empty public schema.
+- `chat`, `reflection`, and `tts` deployed successfully through the Supabase API.
+- Preflight accepts `http://127.0.0.1:5173` and `http://localhost:5173`.
+- The authenticated voice catalog returns Max, Mark, Ava, and Cecilia O’Connor.
+- Course session and opening save correctly.
+- A second authenticated user cannot select another user’s session or messages. Direct authenticated message inserts are rejected. These are targeted live RLS checks, not a comprehensive database security audit.
+- A real Gemini reply was validated and saved as an atomic message pair. A real reflection was generated and saved. Free Mode generated and saved a real opening.
+- An unmocked Chrome test clicked Begin conversation, displayed the saved course opening, ended the session, displayed the no-message reflection, and deleted the test history. No runtime errors.
+- Fictional sessions created by the integration and browser checks were deleted afterward. Test authentication tokens were not printed or saved. Anonymous test identities remain in auth; retention cleanup is not implemented.
+
+## Provider results and limitations
+
+- The initial Gemini 3.8 Flash request timed out. The deployed configurable model is now `gemini-3.5-flash-lite`; live conversation, reflection, and Free Mode succeeded with it.
+- The ElevenLabs request failed because credits were unavailable. Audio generation is not verified as successful. The function now gives actionable errors by failure category.
+- Vercel deployment, successful playback of generated audio, custom background uploads, full keyboard/screen-reader auditing, and comprehensive RLS testing remain outstanding.
+- No private API key is committed. Public browser Supabase configuration lives in ignored `.env.local`. Private provider secrets remain in Supabase.
