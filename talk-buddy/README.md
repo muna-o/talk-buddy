@@ -137,3 +137,21 @@ ELEVENLABS_VOICE_IDS=Gfpl8Yo74Is0W6cPUWWT,v3p1kjzUvro6S76qmYmH,gJx1vCzNCD1EQHT21
 The private key pasted into chat was not saved into the source or environment files. Rotate it in ElevenLabs and put the replacement directly in Supabase. Redeploy `chat` and `tts` after these source changes. For the current local preview, set `ALLOWED_ORIGIN=http://127.0.0.1:5173`; use your exact frontend HTTPS origin when deployed.
 
 These voice descriptions were supplied by the project owner; voice access and live audio still need to be verified with the account's replacement key and available credits.
+
+## Troubleshooting a 404 when beginning practice
+
+`Requested function was not found` from `/functions/v1/chat` means the `chat` Edge Function has not been deployed to the configured project. `PGRST205` from `/rest/v1/lessons` means the database migrations are missing. A public project URL/key and successful anonymous login do not deploy either component.
+
+From the app directory, sign in and review/apply the backend setup:
+
+```sh
+npx --yes supabase login
+npx --yes supabase link --project-ref iekryelbfsnyqfmszzpi
+npx --yes supabase db push --dry-run
+npx --yes supabase db push
+npx --yes supabase functions deploy chat
+npx --yes supabase functions deploy reflection
+npx --yes supabase functions deploy tts
+```
+
+The CLI may ask for the database password while linking; enter it directly in your terminal. Add Gemini and ElevenLabs secrets as described above. For local development `ALLOWED_ORIGIN` can contain both `http://localhost:5173,http://127.0.0.1:5173`. Production should list only exact approved frontend origins. Requests from unapproved browser origins do not receive an allow-origin header; authentication is still checked server-side.

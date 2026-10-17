@@ -1,17 +1,18 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-export const cors = {
-  "Access-Control-Allow-Origin":
-    Deno.env.get("ALLOWED_ORIGIN") || "http://localhost:5173",
-  "Access-Control-Allow-Headers":
-    "authorization, apikey, content-type, x-client-info",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  Vary: "Origin",
-};
-export function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { ...cors, "Content-Type": "application/json" },
-  });
+import { corsHeaders } from "./cors.mjs";
+export function responses(req: Request) {
+  const cors = corsHeaders(
+    req.headers.get("Origin"),
+    Deno.env.get("ALLOWED_ORIGIN"),
+  );
+  return {
+    cors,
+    json: (data: unknown, status = 200) =>
+      new Response(JSON.stringify(data), {
+        status,
+        headers: { ...cors, "Content-Type": "application/json" },
+      }),
+  };
 }
 export function check<T>(result: { data: T; error: unknown }): T {
   if (result.error)

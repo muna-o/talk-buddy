@@ -1,14 +1,14 @@
 import {
   check,
   context,
-  cors,
+  responses,
   gemini,
-  json,
   principles,
   sessionFor,
 } from "../_shared/core.ts";
 import { validateReflection, validUUID } from "../_shared/validation.mjs";
 Deno.serve(async (req) => {
+  const { cors, json } = responses(req);
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   try {
     const { db, user, body } = await context(req);

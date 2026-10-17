@@ -1,7 +1,8 @@
 import { configuredVoices } from "../_shared/voices.mjs";
-import { check, context, cors, json, sessionFor } from "../_shared/core.ts";
+import { check, context, responses, sessionFor } from "../_shared/core.ts";
 import { validUUID } from "../_shared/validation.mjs";
 Deno.serve(async (req) => {
+  const { cors, json } = responses(req);
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   try {
     const { db, user, body } = await context(req);

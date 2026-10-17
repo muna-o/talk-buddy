@@ -1,3 +1,4 @@
+import { functionErrorMessage } from "./functionErrors.mjs";
 import { createClient } from "@supabase/supabase-js";
 export const configured = Boolean(
   import.meta.env.VITE_SUPABASE_URL &&
@@ -34,13 +35,9 @@ export async function invoke(name, body) {
   await getUser();
   const { data, error } = await supabase.functions.invoke(name, { body });
   if (error) {
-    let message = error.message;
-    try {
-      message = (await error.context.json()).error || message;
-    } catch {
-      /* A network failure may not include a response. */
-    }
-    throw new Error(message);
+    throw new Error(
+      await functionErrorMessage(name, error, window.location.origin),
+    );
   }
   return data;
 }
