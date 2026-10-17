@@ -1,3 +1,4 @@
+import Courses from "./pages/Courses";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -11,10 +12,8 @@ import {
   Settings,
   TrendingUp,
 } from "lucide-react";
-import lessons from "./data/lessons.json";
 import { applyPreferences, readPreferences } from "./services/preferences";
 import { configured, getUser, invoke, supabase } from "./services/supabase";
-import CourseCard from "./components/CourseCard";
 import SettingsPanel from "./components/SettingsPanel";
 import Conversation from "./components/Conversation";
 import Lesson from "./pages/Lesson";
@@ -170,32 +169,7 @@ export default function App() {
     }
   }
   const content = () => {
-    if (page === "courses")
-      return (
-        <>
-          <div className="eyebrow">SMALL STEPS, USEFUL SKILLS</div>
-          <h1>Find your starting point.</h1>
-          <p className="lead">
-            Four ways to practice speaking up for yourself. Start wherever feels
-            useful.
-          </p>
-          <div className="course-grid">
-            {lessons.map((l) => (
-              <CourseCard key={l.id} lesson={l} onSelect={selectLesson} />
-            ))}
-          </div>
-          <aside className="flow-note">
-            <BookOpen size={22} />
-            <div>
-              <strong>A little learning. A little practice.</strong>
-              <p>
-                Each lesson follows Learn → Explore → Practice → Reflect. No
-                timer, no score.
-              </p>
-            </div>
-          </aside>
-        </>
-      );
+    if (page === "courses") return <Courses onSelect={selectLesson} />;
     if (page === "lesson" && lesson)
       return (
         <Lesson
@@ -354,9 +328,6 @@ export default function App() {
         className="site-footer"
         inert={!preferences.onboarded ? true : undefined}
       >
-        <span className="footer-brand">
-          <Leaf size={18} /> Your voice. Your needs. Your way.
-        </span>
         <p>An educational prototype. Not therapy or crisis care.</p>
         <button className="text-button" onClick={() => navigate("support")}>
           Support & resources ↗

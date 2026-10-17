@@ -1,5 +1,5 @@
 import {
-  ArrowUpRight,
+  ArrowRight,
   HelpCircle,
   Leaf,
   ShieldCheck,
@@ -11,21 +11,35 @@ const icons = {
   shield: ShieldCheck,
   messages: MessagesSquare,
 };
-export default function CourseCard({ lesson, onSelect }) {
+const titles = {
+  help: "Asking for help",
+  leaf: "Expressing your needs",
+  shield: "Setting boundaries",
+  messages: "Misunderstandings",
+};
+export default function CourseCard({
+  lesson,
+  onSelect,
+  variant = "tile",
+  number,
+}) {
   const Icon = icons[lesson.icon];
   return (
     <button
-      className={`course-card ${lesson.color}`}
+      className={`course-card ${lesson.color} ${variant === "row" ? "course-row" : ""}`}
       onClick={() => onSelect(lesson)}
     >
       <span className="course-icon">
-        <Icon size={25} />
+        <Icon size={variant === "row" ? 34 : 28} aria-hidden="true" />
       </span>
-      <small>{lesson.category}</small>
-      <h3>{lesson.title}</h3>
-      <p>{lesson.description}</p>
-      <span className="card-footer">
-        One guided lesson <ArrowUpRight size={20} />
+      <span className="course-copy">
+        {number && <span className="course-count">COURSE {number}</span>}
+        <h3>{titles[lesson.icon] || lesson.category}</h3>
+        <p>{lesson.description}</p>
+        <span className="course-lesson-label">1 guided lesson</span>
+      </span>
+      <span className="course-open" aria-hidden="true">
+        <ArrowRight size={23} />
       </span>
     </button>
   );

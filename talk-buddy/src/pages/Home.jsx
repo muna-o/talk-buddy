@@ -1,12 +1,11 @@
+import buddyHomeImage from "../assets/buddy-home-image.png";
 import {
   ArrowRight,
   BookOpen,
-  Check,
   HeartHandshake,
   Leaf,
   MessageCircle,
   ShieldCheck,
-  Sparkles,
   VolumeX,
 } from "lucide-react";
 import CourseCard from "../components/CourseCard";
@@ -20,14 +19,12 @@ export default function HomePage({ navigate, selectLesson }) {
             <span className="tiny-leaf">
               <Leaf size={16} />
             </span>{" "}
-            A LITTLE PRACTICE. A LITTLE MORE CONFIDENCE.
+            WELCOME TO TALKBUDDY
           </div>
           <h1>
-            Your voice.
+            Practice conversations.
             <br />
-            Your needs.
-            <br />
-            <em>Your way.</em>
+            <span>Be yourself.</span>
           </h1>
           <p>
             A comfortable space to explore conversations,
@@ -39,28 +36,12 @@ export default function HomePage({ navigate, selectLesson }) {
             practice.
           </div>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="art-circle"></div>
-          <div className="art-note note-one">
-            <span className="note-avatar">you</span>I need a little more time.
-            <span className="note-check">
-              <Check size={16} />
-            </span>
-          </div>
-          <div className="art-note note-two">
-            <span className="note-avatar partner">
-              <Leaf size={21} />
-            </span>
-            Of course. Take your time.
-          </div>
-          <div className="plant">
-            <span></span>
-            <span></span>
-            <span></span>
-            <i></i>
-          </div>
-          <span className="art-caption">A space to be yourself.</span>
-          <Sparkles className="art-spark" size={30} />
+        <div className="buddy-illustration" aria-hidden="true">
+          <div className="buddy-backdrop" />
+          <span className="buddy-speech-bubble">Ready when you are.</span>
+          <img src={buddyHomeImage} alt="" className="buddy-home-image" />
+          <span className="buddy-doodle doodle-one">✦</span>
+          <span className="buddy-doodle doodle-two">✧</span>
         </div>
       </section>
       <section className="mode-section">
@@ -69,7 +50,6 @@ export default function HomePage({ navigate, selectLesson }) {
             <h2>Where would you like to begin?</h2>
             <p>Choose your own pace. You can always change direction.</p>
           </div>
-          <span className="handwritten">One conversation at a time.</span>
         </div>
         <div className="mode-grid">
           <button

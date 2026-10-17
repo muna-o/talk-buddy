@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 export default function FreeMode({ start }) {
   const [form, setForm] = useState({
     scenario: "",
@@ -8,6 +8,8 @@ export default function FreeMode({ start }) {
     personality: "Kind and supportive",
     difficulty: "gentle",
   });
+  const [customRole, setCustomRole] = useState("");
+  const [customPersonality, setCustomPersonality] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,7 +18,15 @@ export default function FreeMode({ start }) {
     setBusy(true);
     setError("");
     try {
-      await start({ mode: "free", ...form });
+      await start({
+        mode: "free",
+        ...form,
+        role: form.role === "Other" ? customRole.trim() : form.role,
+        personality:
+          form.personality === "Custom"
+            ? customPersonality.trim()
+            : form.personality,
+      });
     } catch (e) {
       setError(e.message);
     } finally {
@@ -24,15 +34,14 @@ export default function FreeMode({ start }) {
     }
   }
   return (
-    <div className="narrow">
-      <div className="eyebrow">
-        <Sparkles size={18} /> YOUR SCENARIO, YOUR PACE
-      </div>
-      <h1>What would you like to practice?</h1>
-      <p className="lead">Make space for a conversation that matters to you.</p>
+    <div className="narrow free-page">
+      <header className="page-heading">
+        <h1>Free practice</h1>
+        <p>Choose a situation and make it your own.</p>
+      </header>
       <form className="panel form-stack" onSubmit={submit}>
         <label>
-          Describe the situation
+          What would you like to practice?
           <textarea
             required
             name="scenario"
@@ -56,15 +65,7 @@ export default function FreeMode({ start }) {
           </label>
           <label>
             Partner’s role
-            <input
-              required
-              name="role"
-              maxLength={80}
-              list="roles"
-              value={form.role}
-              onChange={change}
-            />
-            <datalist id="roles">
+            <select name="role" value={form.role} onChange={change}>
               {[
                 "Friend",
                 "Classmate",
@@ -72,37 +73,53 @@ export default function FreeMode({ start }) {
                 "Coworker",
                 "Manager",
                 "Family member",
+                "Other",
               ].map((r) => (
                 <option key={r}>{r}</option>
               ))}
-            </datalist>
+            </select>
           </label>
         </div>
+        {form.role === "Other" && (
+          <label>
+            Custom role
+            <input
+              required
+              maxLength={80}
+              value={customRole}
+              onChange={(e) => setCustomRole(e.target.value)}
+              placeholder="For example, a librarian"
+            />
+          </label>
+        )}
         <label>
           Personality
-          <input
-            required
-            name="personality"
-            maxLength={300}
-            list="personalities"
-            value={form.personality}
-            onChange={change}
-          />
-          <datalist id="personalities">
+          <select name="personality" value={form.personality} onChange={change}>
             {[
               "Kind and supportive",
               "Direct and straightforward",
               "Playful and energetic",
               "Calm and professional",
               "Quiet and reserved",
-            ].map((r) => (
-              <option key={r}>{r}</option>
+              "Custom",
+            ].map((p) => (
+              <option key={p}>{p}</option>
             ))}
-          </datalist>
-          <small>
-            Choose a style or describe your own. This is a fictional partner.
-          </small>
+          </select>
         </label>
+        {form.personality === "Custom" && (
+          <label>
+            Describe their personality
+            <textarea
+              required
+              rows={2}
+              maxLength={300}
+              value={customPersonality}
+              onChange={(e) => setCustomPersonality(e.target.value)}
+              placeholder="For example, cheerful with a silly sense of humor"
+            />
+          </label>
+        )}
         <fieldset>
           <legend>Conversation difficulty</legend>
           <div className="segmented">
@@ -135,7 +152,8 @@ export default function FreeMode({ start }) {
           </p>
         )}
         <button className="primary" disabled={busy}>
-          {busy ? "Connecting…" : "Start practicing"} <ArrowRight size={18} />
+          {busy ? "Connecting…" : "Start practicing"}
+          <ArrowRight size={19} />
         </button>
       </form>
     </div>

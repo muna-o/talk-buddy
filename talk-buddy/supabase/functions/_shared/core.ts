@@ -71,7 +71,7 @@ export async function gemini(
     throw new Error(
       "Gemini is not configured yet. Add the server secret to enable practice.",
     );
-  const model = Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
+  const model = Deno.env.get("GEMINI_MODEL") || "gemini-3.5-flash-lite";
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
     {
