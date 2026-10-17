@@ -1,2 +1,11 @@
 # TalkBuddy
-App that helps people with certain disabilities (e.g. autism) practice speech patterns and learn to advocate for themselves in social situations. Evaluates and gives friendly tips and encouragement.
+
+Your voice. Your needs. Your way.
+
+The React + Vite app lives in [`talk-buddy/`](talk-buddy/). See its [setup and deployment guide](talk-buddy/README.md).
+
+```sh
+cd talk-buddy
+npm install
+npm run dev
+```
