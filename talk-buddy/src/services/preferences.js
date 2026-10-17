@@ -1,12 +1,11 @@
 import { fontFamily } from "./appearance.mjs";
 export const defaults = {
-  theme: "sage",
+  theme: "gray",
   font: "system",
   fontSize: 17,
   lineSpacing: 1.65,
   letterSpacing: 0,
   reducedMotion: true,
-  audioEnabled: false,
   autoSpeech: false,
   clutter: false,
   communication: "typing",

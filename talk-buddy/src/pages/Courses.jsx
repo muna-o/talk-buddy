@@ -1,3 +1,4 @@
+import lessonPlan from "../assets/lesson-plan.png";
 import Whimsy from "../components/Whimsy";
 import lessons from "../data/lessons.json";
 import CourseCard from "../components/CourseCard";
@@ -21,7 +22,12 @@ export default function Courses({ onSelect }) {
         ))}
       </div>
       <aside className="flow-note">
-        <Whimsy kind="clock" className="lesson-format-clock" />
+        <img
+          src={lessonPlan}
+          className="lesson-format-image"
+          alt=""
+          aria-hidden="true"
+        />
         <div>
           <strong>Lesson format</strong>
           <p>Each lesson follows Learn → Explore → Practice → Reflect.</p>

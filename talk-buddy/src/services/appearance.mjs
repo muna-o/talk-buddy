@@ -1,4 +1,5 @@
 export const themeOptions = [
+  ["gray", "Soft Gray (default)"],
   ["sage", "Soft Sage"],
   ["peach", "Warm Peach"],
   ["blue", "Calm Blue"],
@@ -17,7 +18,5 @@ export function fontFamily(font) {
       : '"Trebuchet MS", system-ui, sans-serif';
 }
 export function communicationPreference(method) {
-  return method === "speech"
-    ? { communication: method, audioEnabled: true, autoSpeech: true }
-    : { communication: method };
+  return { communication: method };
 }

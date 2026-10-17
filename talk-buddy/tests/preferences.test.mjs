@@ -6,18 +6,11 @@ import {
   themeOptions,
 } from "../src/services/appearance.mjs";
 import { nextAutomaticReply } from "../src/services/audio.mjs";
-test("choosing speaking enables live speech and automatic audio while other methods preserve separate audio preferences", () => {
-  assert.deepEqual(communicationPreference("speech"), {
-    communication: "speech",
-    audioEnabled: true,
-    autoSpeech: true,
-  });
-  assert.deepEqual(communicationPreference("cards"), {
-    communication: "cards",
-  });
-  assert.deepEqual(communicationPreference("typing"), {
-    communication: "typing",
-  });
+test("communication methods preserve the independent automatic playback choice", () => {
+  for (const method of ["speech", "cards", "typing"])
+    assert.deepEqual(communicationPreference(method), {
+      communication: method,
+    });
 });
 test("automatic reading includes the opening and new replies in every communication method, without repeating a handled reply", () => {
   const opening = { id: "opening", role: "assistant", content: "Hello" };
@@ -57,7 +50,6 @@ test("automatic reading includes the opening and new replies in every communicat
 test("automatic reading remains silent when disabled, paused, or in a safety pause", () => {
   const messages = [{ id: "a", role: "assistant" }];
   for (const [audioEnabled, autoSpeech, paused, status] of [
-    [false, true, false, "active"],
     [true, false, false, "active"],
     [true, true, true, "active"],
     [true, true, false, "safety"],
@@ -81,4 +73,38 @@ test("the optional font is named explicitly and all available themes have unique
     themeOptions.length,
   );
   assert.ok(themeOptions.length >= 9);
+});
+
+test("automatic playback depends on its single preference, including legacy settings with character audio off", () => {
+  const opening = { id: "opening", role: "assistant" };
+  assert.equal(
+    nextAutomaticReply(
+      [opening],
+      { autoSpeech: true, audioEnabled: false },
+      false,
+      "active",
+      new Set(),
+    ),
+    opening,
+  );
+  assert.equal(
+    nextAutomaticReply(
+      [opening],
+      { autoSpeech: true },
+      false,
+      "active",
+      new Set(),
+    ),
+    opening,
+  );
+  assert.equal(
+    nextAutomaticReply(
+      [opening],
+      { autoSpeech: false, audioEnabled: true },
+      false,
+      "active",
+      new Set(),
+    ),
+    null,
+  );
 });

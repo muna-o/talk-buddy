@@ -11,13 +11,7 @@ export function nextAutomaticReply(
   status,
   spokenIds,
 ) {
-  if (
-    !preferences.audioEnabled ||
-    !preferences.autoSpeech ||
-    paused ||
-    status === "safety"
-  )
-    return null;
+  if (!preferences.autoSpeech || paused || status === "safety") return null;
   const latest = messages.findLast((message) => message.role === "assistant");
   return latest && !spokenIds.has(latest.id) ? latest : null;
 }

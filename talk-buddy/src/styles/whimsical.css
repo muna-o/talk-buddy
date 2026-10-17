@@ -417,11 +417,11 @@ small {
   height: 80px;
   transform: rotate(15deg);
 }
-.flow-note .lesson-format-clock {
+.flow-note .lesson-format-image {
   width: 60px;
   height: 64px;
   flex-shrink: 0;
-  transform: rotate(-12deg);
+  object-fit: contain;
 }
 [data-theme="dark"] .course-illustration,
 [data-theme="dark"] .brand-artwork img {
@@ -575,4 +575,18 @@ small {
 }
 [data-clutter="true"] .page-doodles {
   display: none;
+}
+
+:root[data-theme="gray"] {
+  --bg: #f4f4f2;
+  --surface: #fffefa;
+  --ink: #353d39;
+  --muted: #606863;
+  --accent: #315e49;
+  --soft: #e7ece6;
+  --border: #d7dcd5;
+  --peach: #f1e4d7;
+}
+[data-theme="dark"] .lesson-format-image {
+  filter: invert(1);
 }

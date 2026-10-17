@@ -33,13 +33,7 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
       <input
         type="checkbox"
         checked={p[key]}
-        onChange={(e) =>
-          update(
-            key === "audioEnabled" && !e.target.checked
-              ? { audioEnabled: false, autoSpeech: false }
-              : { [key]: e.target.checked },
-          )
-        }
+        onChange={(e) => update({ [key]: e.target.checked })}
       />
     </label>
   );
@@ -92,18 +86,18 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
         {select("Communication method", "communication", [
           ["typing", "Typing"],
           ["cards", "Communication cards"],
-          ["speech", "Speaking — live transcription and spoken replies"],
+          ["speech", "Speaking — live transcription"],
         ])}
         <small>
-          Speaking enables automatic partner audio. Your microphone starts only
-          when you press Start speaking.
+          Your microphone starts only when you press Start speaking. Automatic
+          playback is a separate choice below.
         </small>
         {toggle("Reduce motion", "reducedMotion")}
         {toggle("Simplify decorative elements", "clutter")}
         {toggle(
-          "Enable character audio",
-          "audioEnabled",
-          "Automatic playback is off by default. You can always press Listen.",
+          "Automatically play partner replies",
+          "autoSpeech",
+          "Play the first reply when you enter a conversation and each new reply in your selected voice. Works with typing, cards, and speaking. You can always press Listen manually.",
         )}
         <>
           {select("Character voice", "voice", [
@@ -122,12 +116,6 @@ export default function SettingsPanel({ preferences: p, update, voices = [] }) {
           {!voices.length && (
             <small>Voice choices appear after ElevenLabs is configured.</small>
           )}
-          {p.audioEnabled &&
-            toggle(
-              "Read every partner message automatically",
-              "autoSpeech",
-              "Read the opening and every new reply aloud, whether you type, speak, or use cards.",
-            )}
         </>
       </section>
     </div>

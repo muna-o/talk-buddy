@@ -31,7 +31,7 @@ export default function Conversation({
   const autoSpoken = useRef(new Set());
   useEffect(() => {
     soundAllowed.current = !paused;
-  }, [p.audioEnabled, paused]);
+  }, [paused]);
   useEffect(() => {
     mounted.current = true;
     const cache = audioCache.current;
@@ -46,11 +46,11 @@ export default function Conversation({
     bottom.current?.scrollIntoView({ block: "nearest", behavior: "instant" });
   }, [messages, busy]);
   useEffect(() => {
-    if (!p.audioEnabled || paused) {
+    if (!p.autoSpeech || paused) {
       audioRequest.current += 1;
       audio.current?.pause();
     }
-  }, [p.audioEnabled, paused]);
+  }, [p.autoSpeech, paused]);
   useEffect(() => {
     const stop = () => {
       audioRequest.current += 1;
@@ -109,7 +109,7 @@ export default function Conversation({
   useEffect(() => {
     const latest = nextAutomaticReply(
       messages,
-      { audioEnabled: p.audioEnabled, autoSpeech: p.autoSpeech },
+      { autoSpeech: p.autoSpeech },
       paused,
       session.status,
       autoSpoken.current,
@@ -120,7 +120,7 @@ export default function Conversation({
       void play(latest);
     }, 0);
     return () => clearTimeout(timer);
-  }, [messages, p.audioEnabled, p.autoSpeech, paused, session.status, play]);
+  }, [messages, p.autoSpeech, paused, session.status, play]);
   function updateDraft(value) {
     setDraft(value);
     onUpdate({ session, messages, draft: value });
