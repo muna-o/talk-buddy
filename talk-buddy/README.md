@@ -162,6 +162,12 @@ The project is linked, both migrations are applied, and `chat`, `reflection`, an
 
 The initial Gemini 3.8 Flash request timed out. The deployed model is now `gemini-3.5-flash-lite`, which passed live chat, reflection and Free Mode tests. Its configurable default and environment template match that deployment. Official model reference: https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
 
-ElevenLabs audio was attempted live for all four selected voices. Each returned HTTP 402 `payment_required` because Free-plan users cannot use Voice Library voices through the API. The earlier credit-error label was incorrect; this response does not establish an exhausted account balance. Keep these voices with a plan that includes their API use, or explicitly choose Free-plan API-supported voices. The deployed TTS function distinguishes this plan restriction from insufficient key/workspace quota, unusual-activity restrictions, invalid keys, missing permissions, unavailable voices, and rate limits. Official reference: https://elevenlabs.io/docs/eleven-creative/quickstart
+With the upgraded ElevenLabs plan, live audio requests succeed for Max, Mark, Ava, and Cecilia O’Connor. A real MP3 was decoded and played (muted for testing) in Chrome. TTS transports binary responses as `application/octet-stream` so the Supabase SDK preserves them as Blobs; the frontend assigns the correct `audio/mpeg` type for playback. Provider errors still distinguish free-plan voice restrictions, insufficient quota, unusual activity, invalid keys, permissions, and rate limits.
 
 The frontend has not been deployed to Vercel. Replace the local allowed origins with the exact approved HTTPS origin when deploying publicly.
+
+## Friendly learning interface
+
+Courses are presented as wide vertical rows using their category names. Home uses the supplied transparent illustration and a sans-serif heading. Free practice keeps scenario/partner setup with styled native selects and explicit custom role/personality fields.
+
+The centered conversation has three keyboard-accessible reply modes: **Speak**, **Type**, and **Cards**. Cards fill the input panel with larger phrases; selecting one opens a review area with optional editing before Send. Typing and microphone controls are hidden in Cards mode. Speak shows a prominent recording button and streams interim browser transcription into an editable draft. Nothing sends automatically. Switching modes or leaving practice stops speech capture. Browser support and microphone permission are still required for speech; typing and cards remain available. The Hint control and practice sidebar have been removed, and restart/pause/end controls are grouped at the bottom of the chat.

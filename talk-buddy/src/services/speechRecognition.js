@@ -1,3 +1,8 @@
+export function transcriptFromResults(results) {
+  return Array.from(results, (result) => result[0]?.transcript || "")
+    .filter(Boolean)
+    .join(" ");
+}
 export function startDictation(onText, onError, onEnd) {
   const Recognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -9,8 +14,10 @@ export function startDictation(onText, onError, onEnd) {
   }
   const recognition = new Recognition();
   recognition.lang = navigator.language || "en-US";
-  recognition.interimResults = false;
-  recognition.onresult = (event) => onText(event.results[0][0].transcript);
+  recognition.interimResults = true;
+  recognition.continuous = true;
+  recognition.onresult = (event) =>
+    onText(transcriptFromResults(event.results));
   recognition.onerror = () =>
     onError(
       "Speech input could not finish. Check microphone access, or type or use a card.",
