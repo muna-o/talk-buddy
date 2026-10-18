@@ -4,4 +4,9 @@ dist/
 .env.*
 !.env.example
 !.env.functions.example
+.supabase/
+*.local
 .DS_Store
+playwright-report/
+test-results/
+supabase/.temp/

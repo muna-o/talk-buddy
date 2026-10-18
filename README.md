@@ -15,13 +15,24 @@ TalkBuddy helps people practice everyday conversations and self-advocacy in a fr
 - **AI services:** Google Gemini for conversations/reflections; ElevenLabs for speech playback.
 - **Development tools:** Oxlint, Prettier, Node's test runner, and the Supabase CLI (`npx supabase`).
 
-Installable dependencies and versions are defined in [`talk-buddy/package.json`](talk-buddy/package.json) and its lockfile. The app lives in **`talk-buddy/`**, not the repository root.
+Installable dependencies and versions are defined in [`package.json`](package.json) and its lockfile. All application files and commands live at the repository root.
+
+## Project structure
+
+```text
+src/          React pages, components, styles, and app assets
+public/       Static files and bundled fonts
+supabase/     Edge Functions, database migrations, and configuration
+tests/        Unit tests
+docs/         Design notes
+package.json  Dependencies and development/build commands
+```
 
 ## Run locally
 
 ```sh
 git clone https://github.com/muna-o/talk-buddy.git
-cd talk-buddy/talk-buddy
+cd talk-buddy
 npm ci
 cp .env.example .env.local
 ```
@@ -41,7 +52,7 @@ Open the URL printed by Vite, usually `http://localhost:5173`. Lessons and local
 
 ## Configure the backend
 
-Run these commands from the app directory (`talk-buddy/` inside the repository).
+Run these commands from the repository root.
 
 1. Create a dedicated Supabase project and enable **Authentication → Anonymous Sign-Ins**.
 2. Sign in, link the project, and review/apply the database migrations:
@@ -67,7 +78,7 @@ Keep private keys in Supabase secrets or ignored local files. Only the Supabase 
 
 ## Build and check
 
-From the app directory:
+From the repository root:
 
 ```sh
 npm test              # Unit tests
@@ -80,7 +91,7 @@ npm run preview       # Serve the production build locally
 
 ## Deploy
 
-For Vercel or another static host, set the project root to **`talk-buddy`**, the build command to **`npm run build`**, and the output directory to **`dist`**. Configure both public `VITE_SUPABASE_*` variables before building.
+For Vercel or another static host, set the project root to the **repository root** (`.`), the build command to **`npm run build`**, and the output directory to **`dist`**. Configure both public `VITE_SUPABASE_*` variables before building.
 
 Set the Supabase `ALLOWED_ORIGIN` secret to the approved HTTPS frontend origin (no trailing slash), and update the Supabase Site URL. Multiple approved origins can be comma-separated. Configure anonymous-auth abuse protection before opening the prototype to the public.
 
@@ -90,4 +101,4 @@ Use fictional practice details. Conversations and reflections are stored in Supa
 
 Speech recognition and automatic audio depend on browser support and permissions; manual Listen controls remain available. Sessions have a 20-turn limit. API access requires service credentials and available quotas.
 
-The optional OpenDyslexic font and its license are bundled in [`talk-buddy/public/fonts/`](talk-buddy/public/fonts/). The proposed expanded communication-card design is documented in [`talk-buddy/docs/communication-cards-proposal.md`](talk-buddy/docs/communication-cards-proposal.md).
+The optional OpenDyslexic font and its license are bundled in [`public/fonts/`](public/fonts/). The proposed expanded communication-card design is documented in [`docs/communication-cards-proposal.md`](docs/communication-cards-proposal.md).
