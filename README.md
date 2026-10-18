@@ -9,6 +9,8 @@ TalkBuddy helps people with autism practice expressing their needs and advocatin
 
 <img width="1487" height="794" alt="Course Mode Page" src="https://github.com/user-attachments/assets/e5918aaa-7dfa-40a1-b334-70c4dfe16217" />
 
+<img width="931" height="801" alt="Conversation Page" src="https://github.com/user-attachments/assets/114daf66-9783-4508-a9c7-ee57e2942fb7" />
+
 ## Dependencies
 
 - **Node.js 22.12+** and npm.
