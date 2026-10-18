@@ -1,6 +1,7 @@
 import Courses from "./pages/Courses";
 import Whimsy from "./components/Whimsy";
 import logo from "./assets/logo.png";
+import wordmark from "./assets/talkbuddy.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Leaf } from "lucide-react";
@@ -255,7 +256,7 @@ export default function App() {
             <span className="brand-mark brand-artwork">
               <img src={logo} alt="" />
             </span>
-            talk<span>buddy</span>
+            <img src={wordmark} className="brand-wordmark" alt="TalkBuddy" />
           </button>
           <nav aria-label="Main navigation">
             {navigation.map(([id, artwork, label]) => (
@@ -290,10 +291,10 @@ export default function App() {
       <div className="page-doodles" aria-hidden="true">
         <Whimsy className="edge-doodle edge-one" />
         <Whimsy kind="clock" className="edge-doodle edge-two" />
-        <Whimsy className="edge-doodle edge-three" />
-        <Whimsy className="edge-doodle edge-four" />
-        <Whimsy kind="clock" className="edge-doodle edge-five" />
-        <Whimsy className="edge-doodle edge-six" />
+        <Whimsy kind="heart" className="edge-doodle edge-three" />
+        <Whimsy kind="whirl" className="edge-doodle edge-four" />
+        <Whimsy kind="whirl" className="edge-doodle edge-five" />
+        <Whimsy kind="heart" className="edge-doodle edge-six" />
       </div>
       <main
         id="main"

@@ -1,3 +1,4 @@
+import SketchCardFrame from "../components/SketchCardFrame";
 import ArtworkIcon from "../components/ArtworkIcon";
 import Whimsy from "../components/Whimsy";
 import buddyHomeImage from "../assets/buddy-home-image.png";
@@ -31,7 +32,7 @@ export default function HomePage({ navigate, selectLesson }) {
 
           <img src={buddyHomeImage} alt="" className="buddy-home-image" />
           <Whimsy className="hero-star-one" />
-          <Whimsy className="hero-star-two" />
+          <Whimsy kind="heart" className="hero-star-two" />
         </div>
       </section>
       <section className="mode-section">
@@ -46,6 +47,7 @@ export default function HomePage({ navigate, selectLesson }) {
             className="mode-card course-mode"
             onClick={() => navigate("courses")}
           >
+            <SketchCardFrame />
             <span className="mode-icon">
               <ArtworkIcon name="courses" />
             </span>
@@ -65,6 +67,7 @@ export default function HomePage({ navigate, selectLesson }) {
             className="mode-card open-mode"
             onClick={() => navigate("free")}
           >
+            <SketchCardFrame />
             <span className="mode-icon">
               <ArtworkIcon name="open" />
             </span>

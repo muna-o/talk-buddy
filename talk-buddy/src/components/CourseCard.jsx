@@ -1,5 +1,6 @@
 import { courseTitle } from "../data/courseTitles";
 import { ArrowRight } from "lucide-react";
+import SketchCardFrame from "./SketchCardFrame";
 import CourseIllustration from "./CourseIllustration";
 export default function CourseCard({
   lesson,
@@ -12,6 +13,7 @@ export default function CourseCard({
       className={`course-card ${lesson.color} ${variant === "row" ? "course-row" : ""}`}
       onClick={() => onSelect(lesson)}
     >
+      <SketchCardFrame />
       <span className="course-icon">
         <svg
           className="sketch-frame"
