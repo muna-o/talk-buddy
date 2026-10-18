@@ -1,8 +1,8 @@
+import ArtworkIcon from "../components/ArtworkIcon";
 import Whimsy from "../components/Whimsy";
 import buddyHomeImage from "../assets/buddy-home-image.png";
 import {
   ArrowRight,
-  BookOpen,
   HeartHandshake,
   MessageCircle,
   ShieldCheck,
@@ -47,7 +47,7 @@ export default function HomePage({ navigate, selectLesson }) {
             onClick={() => navigate("courses")}
           >
             <span className="mode-icon">
-              <BookOpen size={28} />
+              <ArtworkIcon name="courses" />
             </span>
             <div>
               <h2>Course Mode</h2>
@@ -62,14 +62,14 @@ export default function HomePage({ navigate, selectLesson }) {
             <span className="mode-number">01</span>
           </button>
           <button
-            className="mode-card free-mode"
+            className="mode-card open-mode"
             onClick={() => navigate("free")}
           >
             <span className="mode-icon">
-              <MessageCircle size={28} />
+              <ArtworkIcon name="open" />
             </span>
             <div>
-              <h2>Free Mode</h2>
+              <h2>Open Mode</h2>
               <p>
                 Have a conversation you’d like to practice? Create your own
                 scenario and talk it through.

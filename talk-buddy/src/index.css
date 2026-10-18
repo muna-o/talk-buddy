@@ -503,7 +503,7 @@ main {
 .course-mode {
   background: var(--soft);
 }
-.free-mode {
+.open-mode {
   background: var(--peach);
 }
 .mode-card:hover {

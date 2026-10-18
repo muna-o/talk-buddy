@@ -190,7 +190,7 @@ export default function Conversation({
         <div className="chat-topic">
           {session.mode === "course" && <CourseIllustration lesson={config} />}
           <h1>
-            {session.mode === "course" ? courseTitle(config) : "Free practice"}
+            {session.mode === "course" ? courseTitle(config) : "Open practice"}
           </h1>
         </div>
         <header className="chat-header">

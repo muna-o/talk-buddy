@@ -3,16 +3,8 @@ import Whimsy from "./components/Whimsy";
 import logo from "./assets/logo.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowRight,
-  BookOpen,
-  Compass,
-  HeartHandshake,
-  Home,
-  Leaf,
-  Settings,
-  TrendingUp,
-} from "lucide-react";
+import { ArrowRight, Leaf } from "lucide-react";
+import ArtworkIcon from "./components/ArtworkIcon";
 import { applyPreferences, readPreferences } from "./services/preferences";
 import { configured, getUser, invoke, supabase } from "./services/supabase";
 import SettingsPanel from "./components/SettingsPanel";
@@ -24,10 +16,10 @@ import Progress from "./pages/Progress";
 import Support from "./pages/Support";
 import HomePage from "./pages/Home";
 const navigation = [
-  ["home", Home, "Home"],
-  ["courses", BookOpen, "Course Mode"],
-  ["free", Compass, "Free Mode"],
-  ["progress", TrendingUp, "My practice"],
+  ["home", "home", "Home"],
+  ["courses", "courses", "Course Mode"],
+  ["free", "open", "Open Mode"],
+  ["progress", "practice", "My practice"],
 ];
 export default function App() {
   const [preferences, setPreferences] = useState(readPreferences);
@@ -266,13 +258,13 @@ export default function App() {
             talk<span>buddy</span>
           </button>
           <nav aria-label="Main navigation">
-            {navigation.map(([id, Icon, label]) => (
+            {navigation.map(([id, artwork, label]) => (
               <button
                 key={id}
                 onClick={() => navigate(id)}
                 aria-current={page === id ? "page" : undefined}
               >
-                <Icon size={17} />
+                <ArtworkIcon name={artwork} />
                 {label}
               </button>
             ))}
@@ -281,15 +273,16 @@ export default function App() {
             <button
               className="icon-button"
               onClick={() => navigate("settings")}
-              aria-label="Settings"
+              aria-label="User Preferences"
+              title="User Preferences"
             >
-              <Settings size={21} />
+              <ArtworkIcon name="settings" />
             </button>
             <button
               className="support-link"
               onClick={() => navigate("support")}
             >
-              Find support <HeartHandshake size={17} />
+              Find support <ArtworkIcon name="support" />
             </button>
           </div>
         </div>

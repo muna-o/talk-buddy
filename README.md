@@ -3,7 +3,7 @@
 TalkBuddy helps people practice everyday conversations and self-advocacy in a friendly, accessible space. It is an educational prototype, not therapy or clinical care.
 
 - **Courses:** asking for help, expressing needs, setting boundaries, and working through misunderstandings. Each lesson follows Learn → Explore → Practice → Reflect.
-- **Free practice:** create a situation and choose a practice partner.
+- **Open practice:** create a situation and choose a practice partner.
 - **Communicate your way:** type, use editable communication cards, or dictate with live transcription. Listen to scenarios and replies, or enable automatic partner audio.
 - **Personal preferences:** adjustable text and spacing, OpenDyslexic, color themes, and simplified decorations.
 

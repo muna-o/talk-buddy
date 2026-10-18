@@ -77,8 +77,8 @@ Deno.serve(async (req) => {
           difficulty,
           objectives: [],
         };
-      } else throw new Error("Choose Course Mode or Free Mode.");
-      // Generate a real first reply in free mode, before creating a session.
+      } else throw new Error("Choose Course Mode or Open Mode.");
+      // Generate a real first reply in open mode, before creating a session.
       const urgent = urgentSignal(configuration.scenario);
       const opening = urgent
         ? safetyReply

@@ -53,7 +53,7 @@ export default function FreeMode({ start, voice }) {
         <div>
           <span className="step-label">Step {step + 1} of 2</span>
           <h1 tabIndex={-1} ref={heading}>
-            Free practice
+            Open practice
           </h1>
           <p>
             {step === 0

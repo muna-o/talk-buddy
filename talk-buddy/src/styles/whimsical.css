@@ -590,3 +590,56 @@ small {
 [data-theme="dark"] .lesson-format-image {
   filter: invert(1);
 }
+
+/* Hand-drawn navigation artwork, with text labels kept alongside it. */
+.artwork-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.82;
+}
+.mode-icon .artwork-icon {
+  width: 46px;
+  height: 46px;
+}
+.nav-tools .artwork-icon {
+  width: 33px;
+  height: 33px;
+}
+[data-theme="dark"] .artwork-icon {
+  filter: invert(1);
+  opacity: 1;
+}
+@media (max-width: 1000px) {
+  .nav-wrap {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .nav-wrap nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+}
+@media (max-width: 760px) {
+  .nav-wrap nav button {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nav-wrap nav .artwork-icon {
+    width: 27px;
+    height: 27px;
+  }
+  .nav-tools .artwork-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .mode-icon .artwork-icon {
+    width: 40px;
+    height: 43px;
+  }
+}
