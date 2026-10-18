@@ -1,6 +1,7 @@
 import SketchCardFrame from "../components/SketchCardFrame";
 import ArtworkIcon from "../components/ArtworkIcon";
 import Whimsy from "../components/Whimsy";
+import buddyLogo from "../assets/logo.png";
 import buddyHomeImage from "../assets/buddy-home-image.png";
 import {
   ArrowRight,
@@ -31,6 +32,7 @@ export default function HomePage({ navigate, selectLesson }) {
           <div className="buddy-backdrop" />
 
           <img src={buddyHomeImage} alt="" className="buddy-home-image" />
+          <img src={buddyLogo} className="whimsy hero-buddy-mark" alt="" />
           <Whimsy className="hero-star-one" />
           <Whimsy kind="heart" className="hero-star-two" />
         </div>

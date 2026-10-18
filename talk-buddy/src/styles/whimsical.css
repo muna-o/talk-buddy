@@ -713,3 +713,20 @@ small {
     height: 47px;
   }
 }
+
+.hero-buddy-mark {
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 105px;
+  height: 90px;
+  transform: rotate(12deg);
+}
+@media (max-width: 760px) {
+  .hero-buddy-mark {
+    right: 5px;
+    top: 0;
+    width: 85px;
+    height: 74px;
+  }
+}

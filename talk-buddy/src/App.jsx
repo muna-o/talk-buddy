@@ -1,6 +1,5 @@
 import Courses from "./pages/Courses";
 import Whimsy from "./components/Whimsy";
-import logo from "./assets/logo.png";
 import wordmark from "./assets/talkbuddy.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
@@ -253,9 +252,6 @@ export default function App() {
             onClick={() => navigate("home")}
             aria-label="TalkBuddy home"
           >
-            <span className="brand-mark brand-artwork">
-              <img src={logo} alt="" />
-            </span>
             <img src={wordmark} className="brand-wordmark" alt="TalkBuddy" />
           </button>
           <nav aria-label="Main navigation">
