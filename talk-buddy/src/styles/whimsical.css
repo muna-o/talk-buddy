@@ -643,3 +643,10 @@ small {
     height: 43px;
   }
 }
+
+/* Give the homepage a wider quiet gutter beside the edge drawings. */
+@media (min-width: 1280px) {
+  main.home-page {
+    max-width: 1184px;
+  }
+}

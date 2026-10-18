@@ -297,6 +297,7 @@ export default function App() {
       </div>
       <main
         id="main"
+        className={page === "home" ? "home-page" : undefined}
         tabIndex={-1}
         ref={heading}
         inert={!preferences.onboarded ? true : undefined}
