@@ -43,11 +43,9 @@ export default function Progress({ open, courseList }) {
   }
   return (
     <>
-      <div className="eyebrow">YOUR LEARNING, YOUR PACE</div>
       <h1>My practice</h1>
       <p className="lead">
-        A record of the conversations you chose to explore. No scores or
-        streaks.
+        A record of the conversations you chose to explore.
       </p>
       <div className="stats">
         <div className="panel">
@@ -121,10 +119,6 @@ export default function Progress({ open, courseList }) {
           )}
         </div>
       )}
-      <small>
-        Showing the most recent 50 sessions. Anonymous history belongs to this
-        browser’s sign-in. Clearing browser storage can lose access.
-      </small>
     </>
   );
 }
