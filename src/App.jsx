@@ -3,7 +3,7 @@ import Whimsy from "./components/Whimsy";
 import wordmark from "./assets/talkbuddy.png";
 import { voiceCatalog } from "../supabase/functions/_shared/voices.mjs";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Leaf } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import ArtworkIcon from "./components/ArtworkIcon";
 import { applyPreferences, readPreferences } from "./services/preferences";
 import { configured, getUser, invoke, supabase } from "./services/supabase";
@@ -32,6 +32,13 @@ export default function App() {
   const [syncReady, setSyncReady] = useState(!configured);
   const heading = useRef(null);
   const localEdited = useRef(false);
+  useEffect(() => {
+    if (["/", "/lander/"].includes(window.location.pathname)) {
+      const url = new URL(window.location.href);
+      url.pathname = "/lander";
+      window.history.replaceState(window.history.state, "", url);
+    }
+  }, []);
   function update(values) {
     localEdited.current = true;
     setPreferences((p) => ({ ...p, ...values }));
@@ -361,7 +368,8 @@ export default function App() {
           >
             <h1 id="welcome-title">Make yourself comfortable.</h1>
             <p>
-              You can type, use cards, or speak. Everything is optional, take your time.
+              You can type, use cards, or speak. Everything is optional, take
+              your time.
             </p>
             <SettingsPanel preferences={preferences} update={update} />
             <div className="button-row">
