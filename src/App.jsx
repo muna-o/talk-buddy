@@ -359,13 +359,9 @@ export default function App() {
               }
             }}
           >
-            <div className="eyebrow">
-              <Leaf size={18} /> WELCOME TO TALKBUDDY
-            </div>
-            <h1 id="welcome-title">Let’s make this comfortable for you.</h1>
+            <h1 id="welcome-title">Make yourself comfortable.</h1>
             <p>
-              You can type, use cards, or speak. Everything is optional, and
-              there’s no rush.
+              You can type, use cards, or speak. Everything is optional, take your time.
             </p>
             <SettingsPanel preferences={preferences} update={update} />
             <div className="button-row">
@@ -374,7 +370,7 @@ export default function App() {
                 className="primary"
                 onClick={() => update({ onboarded: true })}
               >
-                Make yourself at home <ArrowRight size={18} />
+                Continue <ArrowRight size={18} />
               </button>
               <button onClick={() => update({ onboarded: true })}>
                 Skip for now
