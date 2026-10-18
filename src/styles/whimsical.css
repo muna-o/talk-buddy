@@ -1,0 +1,759 @@
+@font-face {
+  font-family: OpenDyslexic;
+  src: url("/fonts/OpenDyslexic-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: OpenDyslexic;
+  src: url("/fonts/OpenDyslexic-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+}
+:root[data-theme="lavender"] {
+  --bg: #f5f0fa;
+  --surface: #fffaff;
+  --ink: #3e3453;
+  --muted: #665d76;
+  --accent: #654d82;
+  --soft: #e9def3;
+  --border: #d8cbe3;
+  --peach: #f1e5dd;
+}
+:root[data-theme="rose"] {
+  --bg: #fff4f5;
+  --surface: #fffdfd;
+  --ink: #533840;
+  --muted: #76565f;
+  --accent: #86465e;
+  --soft: #f5e0e7;
+  --border: #e7c9d3;
+  --peach: #f2e4d3;
+}
+:root[data-theme="sunflower"] {
+  --bg: #fff9e9;
+  --surface: #fffdf6;
+  --ink: #493f27;
+  --muted: #706345;
+  --accent: #765915;
+  --soft: #f5e7b4;
+  --border: #e3d5a8;
+  --peach: #f4e0ca;
+}
+:root[data-theme="ocean"] {
+  --bg: #eff8f7;
+  --surface: #f9fffe;
+  --ink: #244a49;
+  --muted: #486b68;
+  --accent: #22665e;
+  --soft: #d7eee8;
+  --border: #bfded7;
+  --peach: #f4e2d1;
+}
+.whimsy {
+  width: 86px;
+  height: 90px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+[data-clutter="true"] .whimsy {
+  display: none;
+}
+[data-theme="dark"] .whimsy {
+  filter: invert(1);
+}
+.hero {
+  grid-template-columns: minmax(0, 1.7fr) minmax(230px, 1fr);
+  min-height: 370px;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.9rem);
+  white-space: nowrap;
+  letter-spacing: -1.2px;
+  max-width: none;
+}
+.hero-copy > p {
+  font-size: 0.95rem;
+  max-width: 560px;
+}
+.buddy-illustration {
+  height: 350px;
+}
+.buddy-home-image {
+  height: 335px;
+}
+.buddy-backdrop {
+  height: 280px;
+  width: 280px;
+}
+.hero-star-one {
+  position: absolute;
+  left: -15px;
+  top: 5px;
+  width: 77px;
+  transform: rotate(-18deg);
+}
+.hero-star-two {
+  position: absolute;
+  right: -2px;
+  bottom: -3px;
+  width: 100px;
+  transform: rotate(20deg);
+}
+.values-strip {
+  position: relative;
+}
+.pace-doodle {
+  position: absolute;
+  width: 70px;
+  height: 75px;
+  right: 0;
+  top: -45px;
+  transform: rotate(14deg);
+}
+.lesson-panel {
+  position: relative;
+}
+.lesson-star {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 66px;
+  height: 70px;
+  transform: rotate(-15deg);
+}
+.lesson-course-heading h1 {
+  font-size: 2.35rem;
+  max-width: calc(100% - 60px);
+  margin-top: 5px;
+}
+.scenario-context {
+  line-height: 1.7;
+}
+.scenario-context strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 7px;
+}
+.scenario-context p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+.practice-question {
+  font-size: 1.15rem;
+  margin-top: 28px;
+}
+.choices button {
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.chat-topic {
+  padding: 26px 28px 0;
+}
+.chat-topic h1 {
+  font-size: 1.9rem;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
+  margin: 0;
+}
+.chat-header {
+  padding-top: 15px;
+}
+.chat-header h2 {
+  font-size: 1.1rem;
+  margin: 0 0 3px;
+}
+.scenario-strip h2 {
+  font-size: 0.83rem;
+  letter-spacing: 0;
+  margin: 0 0 6px;
+  color: var(--accent);
+}
+.scenario-strip p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.87rem;
+  line-height: 1.7;
+}
+.composer-area {
+  padding-top: 20px;
+}
+.free-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.free-heading .whimsy {
+  width: 80px;
+  transform: rotate(12deg);
+}
+.step-label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.field-help {
+  font-size: 0.84rem;
+  margin: -2px 0 17px;
+}
+.wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 10px;
+}
+.wizard-next {
+  justify-self: end;
+  margin-top: 12px;
+}
+.scenario-summary {
+  padding: 18px 20px;
+  border-radius: 15px;
+  background: var(--soft);
+  margin-bottom: 12px;
+}
+.scenario-summary strong {
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+.scenario-summary p {
+  margin: 7px 0 2px;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+}
+.scenario-summary button {
+  font-size: 0.75rem;
+}
+@media (max-width: 1000px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.65fr) minmax(200px, 1fr);
+  }
+  .hero h1 {
+    font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+  }
+  .buddy-illustration {
+    height: 310px;
+  }
+  .buddy-home-image {
+    height: 295px;
+  }
+  .buddy-backdrop {
+    width: 230px;
+    height: 230px;
+  }
+}
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .hero h1 {
+    font-size: clamp(1rem, 6vw, 1.7rem);
+    letter-spacing: -0.55px;
+    white-space: nowrap;
+  }
+  .hero-copy > p {
+    font-size: 0.92rem;
+  }
+  .buddy-illustration {
+    height: 265px;
+  }
+  .buddy-home-image {
+    height: 265px;
+  }
+  .buddy-backdrop {
+    width: 220px;
+    height: 220px;
+  }
+  .hero-star-one {
+    left: 0;
+    top: 5px;
+    width: 66px;
+  }
+  .hero-star-two {
+    right: 0;
+    width: 80px;
+  }
+  .pace-doodle {
+    top: -30px;
+    width: 55px;
+    height: 60px;
+  }
+  .lesson-course-heading h1 {
+    font-size: 1.7rem;
+    max-width: calc(100% - 35px);
+    overflow-wrap: anywhere;
+  }
+  .lesson-star {
+    width: 45px;
+    height: 50px;
+    right: 8px;
+    top: 15px;
+  }
+  .scenario-context p {
+    font-size: 0.85rem;
+  }
+  .chat-topic {
+    padding: 22px 18px 0;
+  }
+  .chat-topic h1 {
+    font-size: 1.45rem;
+    overflow-wrap: anywhere;
+  }
+  .chat-header {
+    padding-top: 14px;
+  }
+  .scenario-strip p {
+    font-size: 0.8rem;
+  }
+  .wizard-actions button {
+    font-size: 0.8rem;
+    padding: 11px 13px;
+  }
+  .free-heading .whimsy {
+    width: 58px;
+    height: 65px;
+  }
+  .free-heading h1 {
+    font-size: 1.8rem;
+  }
+  .settings-grid .panel,
+  .settings-grid label,
+  .two-columns > label {
+    min-width: 0;
+  }
+  select {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .selected-card-preview label {
+    font-size: 0.85rem;
+  }
+}
+/* Wider glyphs and enlarged text must wrap rather than leave the viewport. */
+h1,
+h2,
+h3,
+p,
+label,
+small {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  h1 {
+    font-size: clamp(1.4rem, 7vw, 2.1rem);
+  }
+  .hero h1 {
+    white-space: normal;
+  }
+  .settings-grid h2 {
+    font-size: 1.1rem;
+  }
+}
+
+/* The supplied drawings carry the same course identity throughout practice. */
+.brand-artwork {
+  width: 52px;
+  height: 44px;
+  margin-right: 7px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.brand-artwork img {
+  width: 64px;
+  height: 55px;
+  object-fit: contain;
+  transform: translateY(5px);
+}
+.course-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.course-icon {
+  padding: 5px;
+}
+.lesson-course-heading,
+.chat-topic {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.lesson-course-heading {
+  padding-right: 50px;
+  margin-bottom: 22px;
+}
+.lesson-course-heading h1 {
+  margin: 0;
+  max-width: none;
+}
+.lesson-course-heading .course-illustration {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+}
+.chat-topic .course-illustration {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.courses-page .page-heading {
+  position: relative;
+  padding-right: 90px;
+}
+.courses-heading-star {
+  position: absolute;
+  right: 12px;
+  top: -7px;
+  width: 75px;
+  height: 80px;
+  transform: rotate(15deg);
+}
+.flow-note .lesson-format-image {
+  width: 60px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+[data-theme="dark"] .course-illustration,
+[data-theme="dark"] .brand-artwork img {
+  filter: invert(1);
+}
+@media (max-width: 760px) {
+  .brand-artwork {
+    width: 43px;
+    margin-right: 5px;
+  }
+  .brand-artwork img {
+    width: 54px;
+    height: 46px;
+  }
+  .lesson-course-heading {
+    gap: 12px;
+    padding-right: 24px;
+  }
+  .lesson-course-heading .course-illustration {
+    width: 52px;
+    height: 58px;
+  }
+  .chat-topic {
+    gap: 12px;
+  }
+  .chat-topic .course-illustration {
+    width: 46px;
+    height: 50px;
+  }
+}
+
+/* Uneven, doubled pencil lines echo the user's hand-drawn course art. */
+.course-card .course-icon {
+  position: relative;
+  border: 0;
+  border-radius: 25% 20% 26% 19% / 21% 27% 19% 25%;
+  padding: 8px;
+}
+.sketch-frame {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.4px;
+  opacity: 0.62;
+  pointer-events: none;
+}
+.sketch-frame path {
+  vector-effect: non-scaling-stroke;
+}
+.sketch-frame path + path {
+  stroke-width: 0.85px;
+  opacity: 0.58;
+}
+.course-card.peach .sketch-frame {
+  transform: rotate(2deg);
+}
+.course-card.blue .sketch-frame {
+  transform: rotate(-2deg);
+}
+.course-card.lavender .sketch-frame {
+  transform: rotate(1deg);
+}
+.text-listen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.text-listen .audio-button {
+  font-size: 0.75rem;
+}
+.text-listen small {
+  font-size: 0.73rem;
+}
+.text-listen .error {
+  flex-basis: 100%;
+  margin: 0;
+}
+.page-doodles {
+  display: none;
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 1280px) {
+  .page-doodles {
+    display: block;
+    position: absolute;
+    inset: 110px 0 24px;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .edge-doodle {
+    position: absolute;
+    width: clamp(30px, calc((100vw - 1200px) / 2), 70px);
+    height: auto;
+    opacity: 0.55;
+  }
+  .edge-one {
+    left: 6px;
+    top: 5%;
+    transform: rotate(-18deg);
+  }
+  .edge-two {
+    right: 6px;
+    top: 12%;
+    transform: rotate(16deg);
+  }
+  .edge-three {
+    left: 8px;
+    top: 48%;
+    transform: rotate(15deg);
+  }
+  .edge-four {
+    right: 9px;
+    top: 52%;
+    transform: rotate(-22deg);
+  }
+  .edge-five {
+    left: 6px;
+    bottom: 0;
+    transform: rotate(-12deg);
+  }
+  .edge-six {
+    right: 5px;
+    bottom: 1%;
+    transform: rotate(14deg);
+  }
+}
+/* Most doodles keep their pencil gray; a few get a quiet wash of color. */
+.edge-three,
+.hero-star-two {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(13%) saturate(620%)
+    hue-rotate(88deg) brightness(95%) contrast(87%);
+}
+.edge-four,
+.courses-heading-star {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(15%) saturate(610%)
+    hue-rotate(215deg) brightness(96%) contrast(86%);
+}
+[data-theme="dark"] .edge-three,
+[data-theme="dark"] .hero-star-two {
+  filter: invert(1) sepia(0.3) saturate(1.7) hue-rotate(55deg);
+}
+[data-theme="dark"] .edge-four,
+[data-theme="dark"] .courses-heading-star {
+  filter: invert(1) sepia(0.3) saturate(1.7) hue-rotate(205deg);
+}
+[data-clutter="true"] .page-doodles {
+  display: none;
+}
+
+:root[data-theme="gray"] {
+  --bg: #f4f4f2;
+  --surface: #fffefa;
+  --ink: #353d39;
+  --muted: #606863;
+  --accent: #315e49;
+  --soft: #e7ece6;
+  --border: #d7dcd5;
+  --peach: #f1e4d7;
+}
+[data-theme="dark"] .lesson-format-image {
+  filter: invert(1);
+}
+
+/* Hand-drawn navigation artwork, with text labels kept alongside it. */
+.artwork-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.82;
+}
+.mode-icon .artwork-icon {
+  width: 46px;
+  height: 46px;
+}
+.nav-tools .artwork-icon {
+  width: 33px;
+  height: 33px;
+}
+[data-theme="dark"] .artwork-icon {
+  filter: invert(1);
+  opacity: 1;
+}
+@media (max-width: 1000px) {
+  .nav-wrap {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .nav-wrap nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+}
+@media (max-width: 760px) {
+  .nav-wrap nav button {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nav-wrap nav .artwork-icon {
+    width: 27px;
+    height: 27px;
+  }
+  .nav-tools .artwork-icon {
+    width: 28px;
+    height: 28px;
+  }
+  .mode-icon .artwork-icon {
+    width: 40px;
+    height: 43px;
+  }
+}
+
+/* Give the homepage a wider quiet gutter beside the edge drawings. */
+@media (min-width: 1280px) {
+  main.home-page {
+    max-width: 1184px;
+  }
+}
+
+/* Place decorations in document coordinates so they scroll with the page. */
+#root {
+  position: relative;
+  isolation: isolate;
+}
+.whimsy-drawing {
+  color: #696d69;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.whimsy-drawing path + path {
+  opacity: 0.48;
+  stroke-width: 1.4;
+}
+.brand-wordmark {
+  width: 140px;
+  height: 55px;
+  object-fit: contain;
+}
+[data-theme="dark"] .brand-wordmark {
+  filter: invert(1);
+}
+.course-card,
+.mode-card {
+  border: 0;
+  box-shadow: none;
+  border-radius: 23px 20px 25px 21px;
+}
+.card-sketch-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.7px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.62;
+  pointer-events: none;
+}
+.card-sketch-frame path {
+  vector-effect: non-scaling-stroke;
+}
+.card-sketch-frame path + path {
+  opacity: 0.52;
+  stroke-width: 1px;
+}
+.course-card:hover > .card-sketch-frame,
+.mode-card:hover > .card-sketch-frame {
+  stroke: var(--accent);
+  opacity: 0.9;
+}
+@media (max-width: 760px) {
+  .brand-wordmark {
+    width: 120px;
+    height: 47px;
+  }
+}
+
+.hero-buddy-mark {
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 105px;
+  height: 90px;
+  transform: rotate(12deg);
+}
+@media (max-width: 760px) {
+  .hero-buddy-mark {
+    right: 5px;
+    top: 0;
+    width: 85px;
+    height: 74px;
+  }
+}
+
+/* Restore a clear section rhythm after simplifying the home-page copy. */
+.home-page .mode-section > .section-heading {
+  margin-bottom: 28px;
+}
+.home-page .mode-section > .section-heading h2 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.3;
+}
+.home-page .featured {
+  margin-top: 72px;
+}
+.home-page .featured > .section-heading h2 {
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .home-page .mode-section > .section-heading {
+    margin-bottom: 24px;
+  }
+  .home-page .mode-section > .section-heading h2 {
+    font-size: 1.55rem;
+  }
+  .home-page .featured {
+    margin-top: 48px;
+  }
+}

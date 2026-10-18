@@ -1,0 +1,5 @@
+-- Shorten scenarios for future sessions; retain existing conversation history.
+update public.lessons set content = jsonb_set(content, '{scenario}', '"Ms. Morgan explained an assignment, but you missed which page to open and what to do first. Ask for a clear first step or written instructions."'::jsonb) where id = 'asking-for-help';
+update public.lessons set content = jsonb_set(content, '{scenario}', '"You and Taylor are planning a presentation in a noisy classroom. It is hard to focus. You could ask for a quieter table, work in writing, or take a break."'::jsonb) where id = 'sharing-your-needs';
+update public.lessons set content = jsonb_set(content, '{scenario}', '"Alex asks to use your school account and keeps pushing after you hesitate. You want to keep your login private. Practice saying no or leaving. Never enter a real password."'::jsonb) where id = 'setting-boundaries';
+update public.lessons set content = jsonb_set(content, '{scenario}', '"Jordan suggests a video for your project. You ask why, hoping to understand, but Jordan hears criticism. Clarify what you meant or ask to pause."'::jsonb) where id = 'working-through-misunderstandings';

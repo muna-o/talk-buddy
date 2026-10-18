@@ -1,0 +1,187 @@
+[
+  {
+    "id": "asking-for-help",
+    "category": "ASKING FOR HELP",
+    "title": "Asking for help",
+    "description": "Ask for instructions in a way that works for you.",
+    "icon": "help",
+    "color": "sage",
+    "objectives": [
+      "Ask for clarification",
+      "Request written instructions",
+      "Ask for processing time"
+    ],
+    "introduction": "Instructions can be confusing, especially when they come quickly. You can ask for a different explanation, written steps, or more time. You do not need to apologize for needing support.",
+    "scenario": "Ms. Morgan explained an assignment, but you missed which page to open and what to do first. Ask for a clear first step or written instructions.",
+    "character": {
+      "name": "Ms. Morgan",
+      "role": "Teacher",
+      "personality": "Calm and professional"
+    },
+    "opening": "We’re starting the assignment now. What would help you get started?",
+    "question": "What could you say or do to get instructions that work for you?",
+    "choices": [
+      {
+        "text": "Could you show me the first step? I did not catch which page to open.",
+        "feedback": "This names the part that is unclear and asks for one manageable step. You do not need to explain or apologize for needing clarity."
+      },
+      {
+        "text": "Could you write the steps down so I can look at them as I work?",
+        "feedback": "Written steps give you something to return to. Asking for a different format is a valid accommodation."
+      },
+      {
+        "text": "I need a moment to process that. Can you come back to me?",
+        "feedback": "You can ask for time before discussing the instructions again. You can use that time to decide what you need."
+      },
+      {
+        "text": "I am not ready to ask yet.",
+        "feedback": "That is understandable. You can wait, use a communication card, or ask later. If you still need instructions, asking for a written first step is one option."
+      }
+    ],
+    "cards": [
+      "Could you explain the first step again?",
+      "Could you write that down?",
+      "I need more time to process this."
+    ],
+    "takeaway": "You deserve instructions you can understand."
+  },
+  {
+    "id": "sharing-your-needs",
+    "category": "EXPRESSING YOUR NEEDS",
+    "title": "Expressing your needs",
+    "description": "Practice asking for a quieter space or a break.",
+    "icon": "leaf",
+    "color": "peach",
+    "objectives": [
+      "Express a sensory need",
+      "Request a quieter space",
+      "Share a communication preference"
+    ],
+    "introduction": "Your comfort matters. You can explain what is difficult and ask for a change. You can also ask for a break without explaining everything about yourself.",
+    "scenario": "You and Taylor are planning a presentation in a noisy classroom. It is hard to focus. You could ask for a quieter table, work in writing, or take a break.",
+    "character": {
+      "name": "Taylor",
+      "role": "Project partner",
+      "personality": "Kind and supportive"
+    },
+    "opening": "Let’s work on our project here. How would you like to begin?",
+    "question": "How could you let Taylor know what would make working together easier?",
+    "choices": [
+      {
+        "text": "The noise is making it hard for me to focus. Can we move to the quieter table?",
+        "feedback": "This describes what is difficult and requests a specific change. Your sensory needs are valid."
+      },
+      {
+        "text": "Could we write our ideas in a shared document instead of talking right now?",
+        "feedback": "This offers another communication method. You can ask for written collaboration without needing to speak."
+      },
+      {
+        "text": "I need a short break from the noise. I will check back in when I am ready.",
+        "feedback": "Taking a break is a valid boundary. You can say what you plan to do without apologizing."
+      },
+      {
+        "text": "I want to keep working, but I am not sure what would help yet.",
+        "feedback": "You do not have to know the perfect solution. You could try a quieter spot first, or take time to work out what you need."
+      }
+    ],
+    "cards": [
+      "This space is too loud for me.",
+      "Can we move somewhere quieter?",
+      "I need a break."
+    ],
+    "takeaway": "Your sensory and communication needs are valid."
+  },
+  {
+    "id": "setting-boundaries",
+    "category": "SETTING BOUNDARIES",
+    "title": "Setting boundaries",
+    "description": "Protect your privacy and practice holding a boundary.",
+    "icon": "shield",
+    "color": "blue",
+    "objectives": [
+      "Decline a request",
+      "Recognize repeated pressure",
+      "Choose when to disengage"
+    ],
+    "introduction": "A boundary tells someone what you will or won’t do. You do not owe anyone your password. If someone keeps asking, you can repeat your boundary, leave, or ask a trusted person for support. Their behavior is not your fault.",
+    "scenario": "Alex asks to use your school account and keeps pushing after you hesitate. You want to keep your login private. Practice saying no or leaving. Never enter a real password.",
+    "character": {
+      "name": "Alex",
+      "role": "Classmate",
+      "personality": "Direct and straightforward"
+    },
+    "opening": "Could I use your account to check the class notes?",
+    "question": "What could you say or do to protect your privacy?",
+    "choices": [
+      {
+        "text": "I do not share access to my account.",
+        "feedback": "This is a clear boundary. You do not owe an apology or a longer explanation."
+      },
+      {
+        "text": "I can send you a copy of the notes, but I am not sharing my login.",
+        "feedback": "This keeps your boundary and offers an alternative. Offering help is optional."
+      },
+      {
+        "text": "I have said no. If you keep asking, I am going to leave.",
+        "feedback": "You can repeat a boundary and decide when to disengage. You are not responsible for making someone else respect it."
+      },
+      {
+        "text": "End the conversation and ask a trusted person for support.",
+        "feedback": "You can leave or get support without continuing to explain. Someone else’s pressure is not your fault."
+      }
+    ],
+    "cards": [
+      "I don’t share my password.",
+      "I’ve said no. Please stop asking.",
+      "I’m ending this conversation."
+    ],
+    "takeaway": "You can say no and leave. You are not responsible for someone else’s pressure."
+  },
+  {
+    "id": "working-through-misunderstandings",
+    "category": "MISUNDERSTANDINGS",
+    "title": "Misunderstandings",
+    "description": "Clarify your meaning while making space for differences.",
+    "icon": "messages",
+    "color": "lavender",
+    "objectives": [
+      "Clarify your meaning",
+      "Express disagreement",
+      "Decide when to pause"
+    ],
+    "introduction": "People can understand the same words differently. Misunderstandings can be mutual. You can explain what you meant, ask a question, disagree, or decide to stop.",
+    "scenario": "Jordan suggests a video for your project. You ask why, hoping to understand, but Jordan hears criticism. Clarify what you meant or ask to pause.",
+    "character": {
+      "name": "Jordan",
+      "role": "Project partner",
+      "personality": "Quiet and reserved"
+    },
+    "opening": "When you asked why I chose that idea, I thought you didn’t like it. Is that what you meant?",
+    "question": "What could you say to clarify the misunderstanding or choose what happens next?",
+    "choices": [
+      {
+        "text": "I was asking how the video would work, not saying I disliked the idea.",
+        "feedback": "This explains your intention directly. Direct wording is a valid way to clear up a misunderstanding."
+      },
+      {
+        "text": "What did you understand me to mean when I asked that?",
+        "feedback": "Asking about Jordan’s interpretation can help both of you see where the misunderstanding happened."
+      },
+      {
+        "text": "I am unsure about making a video. Could we compare it with a written presentation?",
+        "feedback": "You can clarify your question and also disagree. You do not have to pretend to like the same idea."
+      },
+      {
+        "text": "I would like to pause this conversation and talk about it later.",
+        "feedback": "You can ask to pause. Understanding each other is a shared responsibility, and you do not have to resolve everything immediately."
+      }
+    ],
+    "cards": [
+      "That’s not what I meant.",
+      "Could you explain what you understood?",
+      "I see it differently.",
+      "Can we talk about this later?"
+    ],
+    "takeaway": "Understanding each other is a shared responsibility."
+  }
+]
